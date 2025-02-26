@@ -36,6 +36,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "ee852581-9709-42a9-8cf9-dcdf431e3c03"
+      }
+    },
+    "owner": "pedrodellolio"
   }
 }
