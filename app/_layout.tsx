@@ -3,7 +3,7 @@ import { Slot } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { AppState } from "react-native";
+import { AppState, SafeAreaView } from "react-native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { supabase } from "@/supabaseClient";
 import "react-native-reanimated";
@@ -12,7 +12,7 @@ import { SessionProvider } from "@/hooks/use-session";
 SplashScreen.preventAutoHideAsync();
 const queryClient = new QueryClient();
 
-const AppLayout = () => {
+const RootLayout = () => {
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
@@ -31,15 +31,15 @@ const AppLayout = () => {
     if (state == "active") supabase.auth.startAutoRefresh();
     else supabase.auth.stopAutoRefresh();
   });
-  
+
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
-        <Slot />
-        <StatusBar style="auto" />
+          <Slot />
+        <StatusBar style="light" />
       </SessionProvider>
     </QueryClientProvider>
   );
 };
 
-export default AppLayout;
+export default RootLayout;
