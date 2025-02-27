@@ -47,7 +47,20 @@ export async function getTransactionsByPeriod(
 
 export async function postTransaction(transaction: AddTransactionFormData) {
   try {
-    return await api.post<Transaction>(`transaction`, transaction);
+    console.log({
+      title: transaction.title,
+      valueBrl: transaction.valueBrl,
+      occurredAt: transaction.occurredAt,
+      // labels: [transaction.label],
+      type: transaction.type,
+    });
+    return await api.post<Transaction>(`transaction`, {
+      title: transaction.title,
+      valueBrl: transaction.valueBrl,
+      occurredAt: transaction.occurredAt,
+      // labels: [transaction.label],
+      type: transaction.type,
+    });
   } catch (error) {
     console.error("Error fetching transactions:", error);
     throw error;
@@ -56,8 +69,7 @@ export async function postTransaction(transaction: AddTransactionFormData) {
 
 export async function deleteTransaction(transactionId: string) {
   try {
-    console.log(transactionId);
-    return await api.delete<Transaction>(`transaction/`);
+    return await api.delete<Transaction>(`transaction/${transactionId}`);
   } catch (error) {
     console.error("Error deleting transactions:", error);
     throw error;

@@ -7,7 +7,7 @@ export const Theme = {
   lineHeight: {
     lg: 28,
     xl: 28,
-    "2xl": 32
+    "2xl": 32,
   },
   radius: {
     md: 4,
@@ -26,6 +26,7 @@ export const Theme = {
     secondary: "#9ca3af",
     border: "#9ca3af",
     background: "#171717",
+    bgSecondary: "#303030",
     white: "#fff",
     black: "#000",
   },

@@ -7,7 +7,6 @@ import { Theme } from "@/constants/theme";
 
 export default function AppLayout() {
   const { user, loading } = useSession();
-  console.log(user);
   if (loading)
     return (
       <SafeAreaView>
@@ -22,8 +21,13 @@ export default function AppLayout() {
       screenOptions={{
         tabBarShowLabel: false,
         tabBarStyle: {
+          backgroundColor: Theme.colors.background,
           paddingTop: 4,
         },
+        headerStyle: {
+          backgroundColor: Theme.colors.background,
+        },
+        headerTintColor: Theme.colors.white,
       }}
     >
       <Tabs.Screen
@@ -41,9 +45,9 @@ export default function AppLayout() {
           headerRight: () => (
             <Pressable
               style={styles.addButton}
-              onPress={() => router.push("/(app)/transactions/add")}
+              onPress={() => router.push("/(modals)/add-transaction-modal")}
             >
-              <Plus color={Theme.colors.black}/>
+              <Plus color={Theme.colors.black} />
             </Pressable>
           ),
         }}
@@ -56,9 +60,9 @@ export default function AppLayout() {
           headerRight: () => (
             <Pressable
               style={styles.addButton}
-            //   onPress={() => router.push("/(app)/transactions/add")}
+              //   onPress={() => router.push("/(app)/transactions/add")}
             >
-              <Plus color={Theme.colors.black}/>
+              <Plus color={Theme.colors.black} />
             </Pressable>
           ),
         }}
@@ -71,9 +75,9 @@ export default function AppLayout() {
           headerRight: () => (
             <Pressable
               style={styles.addButton}
-            //   onPress={() => router.push("/(app)/transactions/add")}
+              //   onPress={() => router.push("/(app)/transactions/add")}
             >
-              <Plus color={Theme.colors.black}/>
+              <Plus color={Theme.colors.black} />
             </Pressable>
           ),
         }}
@@ -87,6 +91,6 @@ const styles = StyleSheet.create({
     backgroundColor: Theme.colors.secondary,
     borderRadius: 1000,
     padding: 8,
-    marginRight: 8
+    marginRight: 8,
   },
 });

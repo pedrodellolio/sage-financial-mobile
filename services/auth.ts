@@ -21,7 +21,6 @@ export const signUpWithEmail = async (email: string, password: string) => {
       email,
       password,
     });
-    console.log(user);
     if (error) throw new Error(error.message);
     if (user) await api.post(`auth/register`, { email, userId: user.id });
   } catch (err) {

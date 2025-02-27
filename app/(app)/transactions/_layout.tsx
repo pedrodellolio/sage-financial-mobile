@@ -1,4 +1,5 @@
 import { Stack } from "expo-router";
+import { ChevronLeft } from "lucide-react-native";
 
 export default function TransactionsLayout() {
   return (
@@ -14,8 +15,8 @@ export default function TransactionsLayout() {
         name="add"
         options={{
           presentation: "modal",
-          headerTitle: "Add Transaction",
-          headerRight: () => null,
+          headerShown: true,
+          headerLeft: () => <ChevronLeft />,
         }}
       />
     </Stack>
