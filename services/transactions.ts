@@ -40,11 +40,12 @@ export async function getTransactionsByMonthAndYear(
 export async function getTransactionsByPeriod(
   start: Date,
   end: Date,
-  type?: TransactionType
+  type?: TransactionType,
+  limit?: number
 ): Promise<Transaction[]> {
   try {
     const response = await api.get<Transaction[]>(`transaction/get-by-period`, {
-      params: { start, end, type },
+      params: { start, end, type, limit },
     });
     return response.data.map((t) => {
       return { ...t, occurredAt: t.occurredAt };

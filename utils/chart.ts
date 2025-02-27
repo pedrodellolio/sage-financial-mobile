@@ -1,7 +1,8 @@
 import { Transaction } from "@/models/transaction";
 import { eachDayOfInterval, format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { getLastWeekDaysPeriod, today } from "./date";
+import { compareDates, getLastWeekDaysPeriod, today } from "./date";
+import { Theme } from "@/constants/theme";
 
 export const formatExpensesChart = (data: Transaction[]) => {
   const { start, end } = getLastWeekDaysPeriod();
@@ -22,7 +23,7 @@ export const formatExpensesChart = (data: Transaction[]) => {
     return {
       label: format(date, "d", { locale: ptBR }),
       value: transactionMap.get(dateKey) || 0,
-      frontColor: date.getDay() === today.getDay() ? "red" : "",
+      frontColor: compareDates(date, today) ? Theme.colors.primary : Theme.colors.secondary,
     };
   });
 };

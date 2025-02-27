@@ -18,7 +18,8 @@ export default function TransactionsItem({ data }: Props) {
         gap: 2,
         backgroundColor: Theme.colors.bgSecondary,
         borderRadius: Theme.radius.lg,
-        padding: 18,
+        padding: 12,
+        paddingInline: 18,
       }}
     >
       <View
@@ -28,7 +29,7 @@ export default function TransactionsItem({ data }: Props) {
           gap: 4,
         }}
       >
-        <Text style={styles.text}>{data.title}</Text>
+        <Text style={[styles.text, {fontSize: Theme.typography.sm}]}>{data.title}</Text>
 
         <Text
           style={[
@@ -45,7 +46,7 @@ export default function TransactionsItem({ data }: Props) {
       <Text
         style={[
           styles.text,
-          { fontWeight: 600, fontSize: Theme.typography.lg },
+          { fontWeight: 600, fontSize: Theme.typography.md },
         ]}
       >
         {data.type === TransactionType.EXPENSE ? "-" : "+"}
