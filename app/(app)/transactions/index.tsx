@@ -4,6 +4,7 @@ import { getTransactionsByMonthAndYear } from "@/services/transactions";
 import { styles } from "@/styling";
 import { currentMonth, currentYear } from "@/utils/date";
 import { useQuery } from "@tanstack/react-query";
+import { router } from "expo-router";
 import { Pressable, SafeAreaView, ScrollView, Text } from "react-native";
 
 export default function TransactionsScreen() {
@@ -17,7 +18,22 @@ export default function TransactionsScreen() {
     <ScrollView style={[styles.container, { paddingTop: 20 }]}>
       {data ? (
         data.map((transaction) => (
-          <Pressable key={transaction.id} style={{ marginBottom: 12 }}>
+          <Pressable
+            key={transaction.id}
+            style={{ marginBottom: 12 }}
+            onPress={() =>
+              router.push({
+                pathname: "/(modals)/details-transaction-modal",
+                params: {
+                  id: transaction.id,
+                  title: transaction.title,
+                  occurredAt: transaction.occurredAt,
+                  type: transaction.type,
+                  valueBrl: transaction.valueBrl,
+                },
+              })
+            }
+          >
             <TransactionsItem data={transaction} />
           </Pressable>
         ))

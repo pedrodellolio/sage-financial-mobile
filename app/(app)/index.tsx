@@ -1,11 +1,23 @@
 import { Theme } from "@/constants/theme";
+import { Summary } from "@/models/summary";
 import { signOut } from "@/services/auth";
+import { getSummary } from "@/services/wallet";
+import { styles } from "@/styling";
+import { currentMonth, currentYear } from "@/utils/date";
+import { useQuery } from "@tanstack/react-query";
 import { Button, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function DashboardScreen() {
+  const { data, isLoading, error } = useQuery<Summary>({
+    queryKey: ["summary", currentMonth, currentYear],
+    queryFn: () => getSummary(currentMonth, currentYear),
+  });
+
+  if (isLoading) return <Text>Loading...</Text>;
+  if (error) return <Text>Error loading transactions</Text>;
   return (
-    <SafeAreaView style={{ padding: 20 }}>
+    <SafeAreaView style={[styles.container, { paddingTop: 0 }]}>
       <View
         style={{
           backgroundColor: Theme.colors.white,
@@ -25,7 +37,10 @@ export default function DashboardScreen() {
               fontSize: 2 * Theme.typography.xl,
             }}
           >
-            R$30,00
+            {data?.balance.toLocaleString("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+            })}
           </Text>
         </View>
 
@@ -47,7 +62,10 @@ export default function DashboardScreen() {
                 marginTop: 4,
               }}
             >
-              R$30,00
+              {data?.income.toLocaleString("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+            })}
             </Text>
           </View>
           <View>
@@ -61,7 +79,10 @@ export default function DashboardScreen() {
                 marginTop: 4,
               }}
             >
-              R$30,00
+              {data?.expenses.toLocaleString("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+            })}
             </Text>
           </View>
         </View>

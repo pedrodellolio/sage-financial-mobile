@@ -10,9 +10,16 @@ export default function TransactionsLayout() {
           headerShown: false,
         }}
       />
-
       <Stack.Screen
-        name="add"
+        name="add-transaction-modal"
+        options={{
+          presentation: "modal",
+          headerShown: true,
+          headerLeft: () => <ChevronLeft />,
+        }}
+      />
+      <Stack.Screen
+        name="details-transaction-modal"
         options={{
           presentation: "modal",
           headerShown: true,

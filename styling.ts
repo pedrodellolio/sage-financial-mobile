@@ -9,6 +9,13 @@ export const styles = StyleSheet.create({
     paddingTop: 60,
     gap: 28,
   },
+  outlineButton: {
+    borderWidth: 1,
+    padding: 12,
+    borderRadius: Theme.radius.lg,
+    borderColor: Theme.colors.secondary,
+    backgroundColor: undefined,
+  },
   button: {
     padding: 12,
     borderRadius: 8,
