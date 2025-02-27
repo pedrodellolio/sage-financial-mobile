@@ -1,10 +1,12 @@
 import Header from "@/components/header";
 import { Theme } from "@/constants/theme";
 import { TransactionType } from "@/models/transaction";
+import { deleteTransaction } from "@/services/transactions";
 import { styles } from "@/styling";
+import { useMutation } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
 
 type Params = {
   id: string;
@@ -16,6 +18,35 @@ type Params = {
 
 export default function DetailsTransactionsModal() {
   const params: Params = useLocalSearchParams();
+
+  const { mutateAsync } = useMutation({
+    mutationFn: (transactionId: string) => deleteTransaction(transactionId),
+    onSuccess: () => {
+      router.replace("/(app)/transactions");
+    },
+  });
+
+  const confirmDelete = () =>
+    Alert.alert(
+      "Atenção",
+      "Tem certeza que deseja apagar? Essa ação não é reversível.",
+      [
+        {
+          text: "Voltar",
+          style: "cancel",
+        },
+        {
+          text: "Apagar",
+          style: "destructive",
+          onPress: () => mutateAsync(params.id),
+        },
+      ],
+      {
+        userInterfaceStyle: "dark",
+        cancelable: true,
+      }
+    );
+
   return (
     <View style={[styles.container, { flex: 1 }]}>
       <Header
@@ -110,8 +141,21 @@ export default function DetailsTransactionsModal() {
           </Text>
         </View>
       </ScrollView>
-      <View style={[styles.footer, { display: "flex", flexDirection: "row", gap: 20 }]}>
-        <TouchableOpacity style={[styles.button, { flex: 1 }]}>
+      <View
+        style={[
+          styles.footer,
+          { display: "flex", flexDirection: "row", gap: 20 },
+        ]}
+      >
+        <TouchableOpacity
+          style={[styles.button, { flex: 1 }]}
+          onPress={() =>
+            router.push({
+              pathname: "/(modals)/add-transaction-modal",
+              params: { id: params.id },
+            })
+          }
+        >
           <Text
             style={[
               styles.text,
@@ -125,7 +169,10 @@ export default function DetailsTransactionsModal() {
             Editar
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.outlineButton, { flex: 1, borderColor: "red" }]}>
+        <TouchableOpacity
+          style={[styles.outlineButton, { flex: 1, borderColor: "red" }]}
+          onPress={confirmDelete}
+        >
           <Text
             style={[
               styles.text,
@@ -133,7 +180,7 @@ export default function DetailsTransactionsModal() {
                 textAlign: "center",
                 fontWeight: 800,
                 fontSize: Theme.typography.md,
-                color: "red"
+                color: "red",
               },
             ]}
           >

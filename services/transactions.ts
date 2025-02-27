@@ -9,6 +9,16 @@ export interface AddTransactionDto {
   occurredAt: Date;
 }
 
+export async function getTransactionById(transactionId: string) {
+  try {
+    const response = await api.get<Transaction>(`transaction/${transactionId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching transaction:", error);
+    throw error;
+  }
+}
+
 export async function getTransactionsByMonthAndYear(
   month: number,
   year: number
@@ -47,14 +57,26 @@ export async function getTransactionsByPeriod(
 
 export async function postTransaction(transaction: AddTransactionFormData) {
   try {
-    console.log({
+    return await api.post<Transaction>(`transaction`, {
       title: transaction.title,
       valueBrl: transaction.valueBrl,
       occurredAt: transaction.occurredAt,
       // labels: [transaction.label],
       type: transaction.type,
     });
-    return await api.post<Transaction>(`transaction`, {
+  } catch (error) {
+    console.error("Error fetching transactions:", error);
+    throw error;
+  }
+}
+
+export async function updateTransaction(
+  transactionId: string,
+  transaction: AddTransactionFormData
+) {
+  try {
+    return await api.put<Transaction>(`transaction`, {
+      id: transactionId,
       title: transaction.title,
       valueBrl: transaction.valueBrl,
       occurredAt: transaction.occurredAt,

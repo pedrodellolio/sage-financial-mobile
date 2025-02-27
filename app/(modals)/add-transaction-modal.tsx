@@ -1,6 +1,6 @@
 import Header from "@/components/header";
 import { Theme } from "@/constants/theme";
-import { TransactionType } from "@/models/transaction";
+import { Transaction, TransactionType } from "@/models/transaction";
 import {
   AddTransactionFormData,
   addTransactionSchema,
@@ -8,9 +8,9 @@ import {
 import { styles } from "@/styling";
 import { compareDates, today, tomorrow } from "@/utils/date";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, router } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import { Calendar, ChevronLeft, ShoppingCart } from "lucide-react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
   Button,
@@ -25,15 +25,30 @@ import DateTimePicker, {
 } from "@react-native-community/datetimepicker";
 import ChipButton from "@/components/chip-button";
 import DropdownInput from "@/components/dropdown-input";
-import { useMutation } from "@tanstack/react-query";
-import { postTransaction } from "@/services/transactions";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  getTransactionById,
+  postTransaction,
+  updateTransaction,
+} from "@/services/transactions";
+
+type Params = {
+  id: string;
+};
 
 export default function AddTransactionsModal() {
+  const params: Params = useLocalSearchParams();
+  const { data, isLoading, error } = useQuery<Transaction>({
+    queryKey: ["transaction", params.id],
+    queryFn: () => getTransactionById(params.id),
+    enabled: !!params.id,
+  });
+
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting},
-    getValues
+    formState: { errors, isSubmitting },
+    setValue,
   } = useForm<AddTransactionFormData>({
     resolver: zodResolver(addTransactionSchema),
     defaultValues: {
@@ -42,8 +57,21 @@ export default function AddTransactionsModal() {
     },
   });
 
+  useEffect(() => {
+    if (data) {
+      setValue("title", data.title);
+      setValue("occurredAt", new Date(data.occurredAt));
+      setValue("valueBrl", data.valueBrl.toLocaleString("pt-BR"));
+      setValue("type", data.type);
+    }
+  }, [data]);
+
   const { mutateAsync } = useMutation({
-    mutationFn: (data: AddTransactionFormData) => postTransaction(data),
+    mutationFn: (data: AddTransactionFormData) => {
+      return params.id
+        ? updateTransaction(params.id, data)
+        : postTransaction(data);
+    },
     onSuccess: () => {
       router.replace("/(app)/transactions");
     },
@@ -66,6 +94,8 @@ export default function AddTransactionsModal() {
     });
   };
 
+  if (isLoading) return <Text>Loading...</Text>;
+  if (error) return <Text>Error loading transaction</Text>;
   return (
     <View style={[styles.container, { flex: 1 }]}>
       <Header
@@ -305,7 +335,7 @@ export default function AddTransactionsModal() {
               },
             ]}
           >
-            Criar Movimentação
+            {params.id ? "Salvar" : "Criar"}
           </Text>
         </TouchableOpacity>
       </View>
