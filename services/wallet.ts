@@ -18,8 +18,12 @@ export async function getWalletByMonthAndYear(
   }
 }
 
-export async function getSummary(month: number, year: number): Promise<Summary> {
+export async function getSummary(
+  month: number,
+  year: number
+): Promise<Summary> {
   const wallet = await getWalletByMonthAndYear(month, year);
+  console.log(wallet);
   return {
     balance: wallet.incomesBrl - wallet.expensesBrl,
     expenses: wallet.expensesBrl,

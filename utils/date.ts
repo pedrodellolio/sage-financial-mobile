@@ -1,7 +1,6 @@
 export const today = new Date();
 export const currentMonth = today.getMonth() + 1;
 export const currentYear = today.getFullYear();
-
 const tomorrowDate = new Date(today);
 tomorrowDate.setDate(today.getDate() + 1);
 export const tomorrow = tomorrowDate;

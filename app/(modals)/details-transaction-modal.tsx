@@ -50,8 +50,8 @@ export default function DetailsTransactionsModal() {
   return (
     <View style={[styles.container, { flex: 1 }]}>
       <Header
-        title={params.title}
-        leftIcon={
+        middle={params.title}
+        left={
           <ChevronLeft
             color={Theme.colors.white}
             onPress={() => router.replace("/(app)/transactions")}

@@ -16,6 +16,12 @@ export const styles = StyleSheet.create({
     borderColor: Theme.colors.secondary,
     backgroundColor: undefined,
   },
+  addButton: {
+    backgroundColor: Theme.colors.secondary,
+    borderRadius: 1000,
+    padding: 8,
+    marginRight: 8,
+  },
   button: {
     padding: 12,
     borderRadius: 8,
@@ -39,6 +45,11 @@ export const styles = StyleSheet.create({
   errorInput: {
     borderColor: "red",
   },
+  headerText: {
+    color: Theme.colors.white,
+    fontWeight: 600,
+    fontSize: Theme.typography.xl,
+  },
   text: {
     color: Theme.colors.white,
     fontSize: Theme.typography.md,
@@ -50,7 +61,6 @@ export const styles = StyleSheet.create({
     left: 0,
     right: 0,
     padding: 20,
-    // backgroundColor: Theme.colors.bgPrimary, // Adjust if needed
     alignItems: "center",
   },
   pressableWithIcon: {
@@ -58,5 +68,11 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 20,
+  },
+  divider: {
+    borderWidth: 1,
+    width: 1,
+    height: "100%",
+    borderColor: Theme.colors.bgSecondary,
   },
 });

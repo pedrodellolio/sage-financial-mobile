@@ -99,12 +99,11 @@ export default function AddTransactionsModal() {
   return (
     <View style={[styles.container, { flex: 1 }]}>
       <Header
-        title="Adicionar"
-        leftIcon={
-          <ChevronLeft
-            color={Theme.colors.white}
-            onPress={() => router.replace("/(app)/transactions")}
-          />
+        middle="Adicionar"
+        left={
+          <Pressable onPress={() => router.replace("/(app)/transactions")}>
+            <ChevronLeft color={Theme.colors.white} />
+          </Pressable>
         }
       />
       <View
