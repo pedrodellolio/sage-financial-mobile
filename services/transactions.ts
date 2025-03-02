@@ -37,6 +37,22 @@ export async function getTransactionsByMonthAndYear(
   }
 }
 
+export async function getTotalExpensesByLabel(
+  labelId: string,
+  month: number,
+  year: number
+): Promise<number> {
+  try {
+    const response = await api.get<number>(`transaction/total`, {
+      params: { labelId, month, year },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching total:", error);
+    throw error;
+  }
+}
+
 export async function getTransactionsByPeriod(
   start: Date,
   end: Date,
@@ -62,7 +78,7 @@ export async function postTransaction(transaction: AddTransactionFormData) {
       title: transaction.title,
       valueBrl: transaction.valueBrl,
       occurredAt: transaction.occurredAt,
-      // labels: [transaction.label],
+      label: transaction.label ?? null,
       type: transaction.type,
     });
   } catch (error) {
@@ -81,7 +97,7 @@ export async function updateTransaction(
       title: transaction.title,
       valueBrl: transaction.valueBrl,
       occurredAt: transaction.occurredAt,
-      // labels: [transaction.label],
+      label: transaction.label,
       type: transaction.type,
     });
   } catch (error) {

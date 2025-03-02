@@ -2,9 +2,8 @@ import { useSession } from "@/hooks/use-session";
 import { Redirect, router, Tabs } from "expo-router";
 import { Home, Book, Plus, Goal, Calendar, Bell } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Pressable, Text, StyleSheet } from "react-native";
+import { Text } from "react-native";
 import { Theme } from "@/constants/theme";
-import { styles } from "@/styling";
 
 export default function AppLayout() {
   const { user, loading } = useSession();
@@ -58,14 +57,6 @@ export default function AppLayout() {
         options={{
           title: "Lembretes",
           tabBarIcon: ({ color }) => <Bell size={22} color={color} />,
-          headerRight: () => (
-            <Pressable
-              style={styles.addButton}
-              //   onPress={() => router.push("/(app)/transactions/add")}
-            >
-              <Plus color={Theme.colors.black} />
-            </Pressable>
-          ),
         }}
       />
     </Tabs>

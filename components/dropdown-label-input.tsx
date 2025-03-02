@@ -9,17 +9,26 @@ import { StyleSheet, View, Text } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
 interface Props {
-  value: Label;
+  value?: Label;
   onChange: (value: Label) => void;
+  month: number;
+  year: number;
+  fromBudgetGoal?: boolean;
 }
 
-const DropdownInput = ({ value, onChange }: Props) => {
+const DropdownLabelInput = ({
+  value,
+  onChange,
+  month,
+  year,
+  fromBudgetGoal,
+}: Props) => {
   const [isFocus, setIsFocus] = useState(false);
-
   const { data, isLoading, error } = useQuery<Label[]>({
-    queryKey: ["labels"],
-    queryFn: () => getLabels(),
+    queryKey: ["labels", fromBudgetGoal ?? false, month, year],
+    queryFn: () => getLabels(fromBudgetGoal ?? false, month, year),
   });
+  console.log(fromBudgetGoal ?? false, month, year);
 
   if (isLoading) return <Text>Loading...</Text>;
   if (error) return <Text>Error loading labels</Text>;
@@ -53,7 +62,7 @@ const DropdownInput = ({ value, onChange }: Props) => {
   );
 };
 
-export default DropdownInput;
+export default DropdownLabelInput;
 
 const styleSheet = StyleSheet.create({
   container: {

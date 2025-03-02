@@ -17,7 +17,7 @@ export default function MonthSummaryCard({ month, year }: Props) {
     queryKey: ["summary", month, year],
     queryFn: () => getSummary(month, year),
   });
-
+console.log(data);
   if (isLoading) return <Text>Carregando...</Text>;
   if (error) return <Text>Ocorreu um erro.</Text>;
   return (

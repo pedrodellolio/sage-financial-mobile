@@ -1,6 +1,4 @@
-import { Transaction, TransactionType } from "@/models/transaction";
 import api from "./axios-config";
-import { AddTransactionFormData } from "@/schemas/add-transaction-schema";
 import { BudgetGoal, BudgetGoalType } from "@/models/budgetGoal";
 import { AddBudgetGoalFormData } from "@/schemas/add-budget-goal-schema";
 
@@ -38,12 +36,18 @@ export async function getBudgetGoalsByMonthAndYear(
   }
 }
 
-export async function postBudgetGoal(goal: AddBudgetGoalFormData) {
+export async function postBudgetGoal(
+  goal: AddBudgetGoalFormData,
+  month: number,
+  year: number
+) {
   try {
-    return await api.post<Transaction>(`budgetGoal`, {
+    return await api.post<BudgetGoal>(`budgetGoal`, {
       value: goal.value,
       type: goal.type,
-      labels: goal.labelId,
+      label: goal.label,
+      month,
+      year,
     });
   } catch (error) {
     console.error("Error fetching transactions:", error);
@@ -51,28 +55,26 @@ export async function postBudgetGoal(goal: AddBudgetGoalFormData) {
   }
 }
 
-// export async function updateBudgetGoal(
-//   goalId: string,
-//   transaction: AddBudgetGoalFormData
-// ) {
-//   try {
-//     return await api.put<Transaction>(`budgetGoal`, {
-//       id: goalId,
-//       title: transaction.title,
-//       valueBrl: transaction.valueBrl,
-//       occurredAt: transaction.occurredAt,
-//       // labels: [transaction.label],
-//       type: transaction.type,
-//     });
-//   } catch (error) {
-//     console.error("Error fetching transactions:", error);
-//     throw error;
-//   }
-// }
+export async function updateBudgetGoal(
+  budgetGoalId: string,
+  budgetGoal: AddBudgetGoalFormData
+) {
+  try {
+    return await api.put<BudgetGoal>(`budgetGoal`, {
+      id: budgetGoalId,
+      value: budgetGoal.value,
+      type: budgetGoal.type,
+      label: budgetGoal.label,
+    });
+  } catch (error) {
+    console.error("Error updating goal:", error);
+    throw error;
+  }
+}
 
 export async function deleteBudgetGoal(goalId: string) {
   try {
-    return await api.delete<Transaction>(`budgetGoal/${goalId}`);
+    return await api.delete<BudgetGoal>(`budgetGoal/${goalId}`);
   } catch (error) {
     console.error("Error deleting goal:", error);
     throw error;

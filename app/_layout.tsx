@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { supabase } from "@/supabaseClient";
 import "react-native-reanimated";
 import { SessionProvider } from "@/hooks/use-session";
+import { WalletProvider } from "@/hooks/use-wallet";
 
 SplashScreen.preventAutoHideAsync();
 const queryClient = new QueryClient();
@@ -35,7 +36,9 @@ const RootLayout = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
+        <WalletProvider>
           <Slot />
+        </WalletProvider>
         <StatusBar style="light" />
       </SessionProvider>
     </QueryClientProvider>

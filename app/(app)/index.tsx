@@ -2,6 +2,7 @@ import WeekExpensesChart from "@/components/charts/week-expenses-chart";
 import WeekIncomeChart from "@/components/charts/week-income-chart";
 import Header from "@/components/header";
 import LatestTransactionsList from "@/components/latest-transactions-list";
+import RecalculateWalletButton from "@/components/recalculate-wallet-button";
 import { Theme } from "@/constants/theme";
 import { Summary } from "@/models/summary";
 import { TransactionType } from "@/models/transaction";
@@ -11,7 +12,13 @@ import { currentMonth, currentYear } from "@/utils/date";
 import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react-native";
 import { useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import {
+  Pressable,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function DashboardScreen() {
   const [chartType, setChartType] = useState<TransactionType>(
@@ -28,10 +35,16 @@ export default function DashboardScreen() {
     <View style={[styles.container]}>
       <Header
         middle={"Início"}
+        left={
+          <RecalculateWalletButton
+            month={currentMonth}
+            year={currentYear}
+          />
+        }
         right={
-          <Pressable>
+          <TouchableOpacity>
             <Plus color={Theme.colors.white} />
-          </Pressable>
+          </TouchableOpacity>
         }
       />
       <ScrollView style={[{ paddingTop: 0 }]}>
@@ -60,7 +73,7 @@ export default function DashboardScreen() {
                 fontSize: 2 * Theme.typography.xl,
               }}
             >
-              {data?.balance.toLocaleString("pt-BR", {
+              {(data?.balance ?? 0).toLocaleString("pt-BR", {
                 style: "currency",
                 currency: "BRL",
               })}
@@ -92,7 +105,7 @@ export default function DashboardScreen() {
                   color: "green",
                 }}
               >
-                {data?.income.toLocaleString("pt-BR", {
+                {(data?.income ?? 0).toLocaleString("pt-BR", {
                   style: "currency",
                   currency: "BRL",
                 })}
@@ -116,7 +129,7 @@ export default function DashboardScreen() {
                   color: "red",
                 }}
               >
-                {data?.expenses.toLocaleString("pt-BR", {
+                {(data?.expenses ?? 0).toLocaleString("pt-BR", {
                   style: "currency",
                   currency: "BRL",
                 })}

@@ -7,15 +7,10 @@ import { getBudgetGoalsByMonthAndYear } from "@/services/budgetGoals";
 import { styles } from "@/styling";
 import { currentMonth, currentYear } from "@/utils/date";
 import { useQuery } from "@tanstack/react-query";
+import { router } from "expo-router";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react-native";
 import { useState } from "react";
-import {
-  Pressable,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 export default function GoalsScreen() {
   const [selectedMonth, setSelectedMonth] = useState<number>(currentMonth - 1);
@@ -57,9 +52,7 @@ export default function GoalsScreen() {
             <TouchableOpacity onPress={handlePreviousMonth}>
               <ChevronLeft color={Theme.colors.white} />
             </TouchableOpacity>
-            <TouchableOpacity
-            // onPress={() => openDatePicker(new Date(), setDate)}
-            >
+            <TouchableOpacity>
               <Text style={styles.headerText}>
                 {MONTHS[selectedMonth].short} {selectedYear}
               </Text>
@@ -70,11 +63,20 @@ export default function GoalsScreen() {
           </>
         }
         right={
-          <Pressable
-          // onPress={() => router.push("/(modals)/add-goal-modal")}
+          <TouchableOpacity
+            onPress={() =>
+              router.push({
+                pathname: "/(modals)/add-budget-goal-modal",
+                params: {
+                  month: selectedMonth + 1,
+                  year: selectedYear,
+                  fromBudgetGoal: 1,
+                },
+              })
+            }
           >
             <Plus color={Theme.colors.white} />
-          </Pressable>
+          </TouchableOpacity>
         }
       />
 
@@ -84,23 +86,30 @@ export default function GoalsScreen() {
       >
         {data ? (
           data.map((goal) => (
-            <Pressable
+            <TouchableOpacity
               key={goal.id}
               style={{ marginBottom: 12 }}
-              // onPress={() =>
-              //   router.push({
-              //     pathname: "/(modals)/details-budget-goal-modal",
-              //     params: {
-              //       id: goal.id,
-              //       type: goal.type,
-              //       value: goal.value,
-              //       labelId: goal.label.id
-              //     },
-              //   })
-              // }
+              onPress={() =>
+                router.push({
+                  pathname: "/(modals)/add-budget-goal-modal",
+                  params: {
+                    id: goal.id,
+                    value: goal.value,
+                    type: goal.type,
+                    labelId: goal.label.id,
+                    month: selectedMonth + 1,
+                    year: selectedYear,
+                    fromBudgetGoal: 1,
+                  },
+                })
+              }
             >
-              <BudgetGoalItem data={goal} />
-            </Pressable>
+              <BudgetGoalItem
+                data={goal}
+                month={selectedMonth + 1}
+                year={selectedYear}
+              />
+            </TouchableOpacity>
           ))
         ) : (
           <Text style={[styles.text, { textAlign: "center", marginTop: 28 }]}>

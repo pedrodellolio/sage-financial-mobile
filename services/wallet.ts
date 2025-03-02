@@ -3,6 +3,16 @@ import api from "./axios-config";
 import { Wallet } from "@/models/wallet";
 import { Summary } from "@/models/summary";
 
+export async function syncWallet(month: number, year: number) {
+  try {
+    const response = await api.patch<Wallet>(`wallet/sync`, { month, year });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching transactions:", error);
+    throw error;
+  }
+}
+
 export async function getWalletByMonthAndYear(
   month: number,
   year: number
@@ -23,7 +33,6 @@ export async function getSummary(
   year: number
 ): Promise<Summary> {
   const wallet = await getWalletByMonthAndYear(month, year);
-  console.log(wallet);
   return {
     balance: wallet.incomesBrl - wallet.expensesBrl,
     expenses: wallet.expensesBrl,

@@ -1,0 +1,28 @@
+import React from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { TouchableOpacity } from "react-native";
+import { syncWallet } from "@/services/wallet";
+import { RefreshCcw } from "lucide-react-native";
+import { Theme } from "@/constants/theme";
+
+interface Props {
+  month: number;
+  year: number;
+}
+
+export default function RecalculateWalletButton({ month, year }: Props) {
+  const queryClient = useQueryClient();
+
+  const { mutateAsync } = useMutation({
+    mutationFn: () => syncWallet(month, year),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["summary"] });
+    },
+  });
+
+  return (
+    <TouchableOpacity onPress={() => mutateAsync()}>
+      <RefreshCcw color={Theme.colors.white} />
+    </TouchableOpacity>
+  );
+}

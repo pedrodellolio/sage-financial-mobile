@@ -1,5 +1,6 @@
 import Header from "@/components/header";
 import MonthSummaryCard from "@/components/month-summary-card";
+import RecalculateWalletButton from "@/components/recalculate-wallet-button";
 import TransactionsItem from "@/components/transaction-item";
 import { MONTHS } from "@/constants/months";
 import { Theme } from "@/constants/theme";
@@ -28,7 +29,6 @@ export default function TransactionsScreen() {
     queryKey: ["transactions", selectedMonth, selectedYear],
     queryFn: () =>
       getTransactionsByMonthAndYear(selectedMonth + 1, selectedYear),
-    enabled: !!selectedMonth && !!selectedYear,
   });
 
   const handlePreviousMonth = () => {
@@ -73,12 +73,22 @@ export default function TransactionsScreen() {
             </TouchableOpacity>
           </>
         }
+        left={
+          <RecalculateWalletButton
+            month={selectedMonth + 1}
+            year={selectedYear}
+          />
+        }
         right={
-          <Pressable
-            onPress={() => router.push("/(modals)/add-transaction-modal")}
+          <TouchableOpacity
+            onPress={() =>
+              router.push({
+                pathname: "/(modals)/add-transaction-modal",
+              })
+            }
           >
             <Plus color={Theme.colors.white} />
-          </Pressable>
+          </TouchableOpacity>
         }
       />
 
@@ -90,7 +100,7 @@ export default function TransactionsScreen() {
       >
         {data ? (
           data.map((transaction) => (
-            <Pressable
+            <TouchableOpacity
               key={transaction.id}
               style={{ marginBottom: 12 }}
               onPress={() =>
@@ -107,7 +117,7 @@ export default function TransactionsScreen() {
               }
             >
               <TransactionsItem data={transaction} />
-            </Pressable>
+            </TouchableOpacity>
           ))
         ) : (
           <Text style={[styles.text, { textAlign: "center", marginTop: 28 }]}>

@@ -8,32 +8,31 @@ import {
 import { styles } from "@/styling";
 import { compareDates, today, tomorrow } from "@/utils/date";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, router, useLocalSearchParams } from "expo-router";
-import { Calendar, ChevronLeft, ShoppingCart } from "lucide-react-native";
-import { useEffect, useState } from "react";
+import { router, useLocalSearchParams } from "expo-router";
+import { Calendar, ChevronLeft } from "lucide-react-native";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
-  Button,
   Pressable,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import DateTimePicker, {
-  DateTimePickerAndroid,
-} from "@react-native-community/datetimepicker";
+import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import ChipButton from "@/components/chip-button";
-import DropdownInput from "@/components/dropdown-input";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   getTransactionById,
   postTransaction,
   updateTransaction,
 } from "@/services/transactions";
+import DropdownLabelInput from "@/components/dropdown-label-input";
 
 type Params = {
   id: string;
+  month: string;
+  year: string;
 };
 
 export default function AddTransactionsModal() {
@@ -63,6 +62,10 @@ export default function AddTransactionsModal() {
       setValue("occurredAt", new Date(data.occurredAt));
       setValue("valueBrl", data.valueBrl.toLocaleString("pt-BR"));
       setValue("type", data.type);
+      setValue(
+        "label",
+        data.label && { id: data.label.id, title: data.label.title }
+      );
     }
   }, [data]);
 
@@ -101,9 +104,11 @@ export default function AddTransactionsModal() {
       <Header
         middle="Adicionar"
         left={
-          <Pressable onPress={() => router.replace("/(app)/transactions")}>
+          <TouchableOpacity
+            onPress={() => router.replace("/(app)/transactions")}
+          >
             <ChevronLeft color={Theme.colors.white} />
-          </Pressable>
+          </TouchableOpacity>
         }
       />
       <View
@@ -271,8 +276,6 @@ export default function AddTransactionsModal() {
               <TextInput
                 style={[styles.input, errors.title && styles.errorInput]}
                 placeholder="Título"
-                autoCapitalize="none"
-                keyboardType="email-address"
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
@@ -311,13 +314,18 @@ export default function AddTransactionsModal() {
           <Text style={{ color: "red" }}>{errors.valueBrl.message}</Text>
         )}
 
-        {/* <Controller
+        <Controller
           control={control}
           name="label"
           render={({ field: { onChange, value } }) => (
-            <DropdownInput onChange={onChange} value={value} />
+            <DropdownLabelInput
+              onChange={onChange}
+              value={value}
+              month={Number(params.month)}
+              year={Number(params.year)}
+            />
           )}
-        /> */}
+        />
       </View>
       <View style={styles.footer}>
         <TouchableOpacity
