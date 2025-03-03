@@ -3,6 +3,7 @@ import WeekIncomeChart from "@/components/charts/week-income-chart";
 import Header from "@/components/header";
 import LatestTransactionsList from "@/components/latest-transactions-list";
 import RecalculateWalletButton from "@/components/recalculate-wallet-button";
+import UpcomingExpensesList from "@/components/upcoming-expenses-list";
 import { Theme } from "@/constants/theme";
 import { Summary } from "@/models/summary";
 import { TransactionType } from "@/models/transaction";
@@ -10,7 +11,7 @@ import { getSummary } from "@/services/wallet";
 import { styles } from "@/styling";
 import { currentMonth, currentYear } from "@/utils/date";
 import { useQuery } from "@tanstack/react-query";
-import { Plus } from "lucide-react-native";
+import { ChevronRight, Plus } from "lucide-react-native";
 import { useState } from "react";
 import {
   Pressable,
@@ -36,10 +37,7 @@ export default function DashboardScreen() {
       <Header
         middle={"Início"}
         left={
-          <RecalculateWalletButton
-            month={currentMonth}
-            year={currentYear}
-          />
+          <RecalculateWalletButton month={currentMonth} year={currentYear} />
         }
         right={
           <TouchableOpacity>
@@ -47,37 +45,44 @@ export default function DashboardScreen() {
           </TouchableOpacity>
         }
       />
-      <ScrollView style={[{ paddingTop: 0 }]}>
-        <View
-          style={{
-            backgroundColor: Theme.colors.white,
-            padding: 28,
-            borderRadius: Theme.radius.lg,
-            display: "flex",
-            gap: 28,
-          }}
-        >
-          <View>
-            <Text
-              style={{
-                fontWeight: 600,
-                fontSize: Theme.typography.lg,
-                color: Theme.colors.bgSecondary,
-              }}
-            >
-              Saldo
-            </Text>
-            <Text
-              style={{
-                fontWeight: 800,
-                fontSize: 2 * Theme.typography.xl,
-              }}
-            >
-              {(data?.balance ?? 0).toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              })}
-            </Text>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={{ display: "flex", gap: 10 }}>
+          <View
+            style={{
+              backgroundColor: Theme.colors.bgSecondary,
+              padding: 20,
+              borderRadius: Theme.radius.lg,
+            }}
+          >
+            <View style={[styles.row, { justifyContent: "space-between" }]}>
+              <View>
+                <Text
+                  style={{
+                    fontSize: Theme.typography.sm,
+                    color: Theme.colors.secondary,
+                  }}
+                >
+                  Saldo
+                </Text>
+                <Text
+                  style={[
+                    styles.text,
+                    {
+                      fontWeight: 600,
+                      fontSize: Theme.typography["2xl"],
+                    },
+                  ]}
+                >
+                  {(data?.balance ?? 0).toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+                </Text>
+              </View>
+              <TouchableOpacity>
+                <ChevronRight color={Theme.colors.white} />
+              </TouchableOpacity>
+            </View>
           </View>
 
           <View
@@ -85,24 +90,26 @@ export default function DashboardScreen() {
               display: "flex",
               flexDirection: "row",
               justifyContent: "space-between",
+              backgroundColor: Theme.colors.bgSecondary,
+              borderRadius: Theme.radius.lg,
+              padding: 20,
             }}
           >
-            <View>
+            <View style={{ flex: 1 }}>
               <Text
                 style={{
-                  fontWeight: 600,
-                  fontSize: Theme.typography.md,
-                  color: Theme.colors.bgSecondary,
+                  fontSize: Theme.typography.sm,
+                  color: Theme.colors.secondary,
                 }}
               >
                 Receitas
               </Text>
               <Text
                 style={{
-                  fontSize: Theme.typography.xl,
-                  fontWeight: 800,
+                  fontSize: Theme.typography.lg,
+                  fontWeight: 600,
                   marginTop: 4,
-                  color: "green",
+                  color: Theme.colors.white,
                 }}
               >
                 {(data?.income ?? 0).toLocaleString("pt-BR", {
@@ -111,22 +118,29 @@ export default function DashboardScreen() {
                 })}
               </Text>
             </View>
-            <View>
+            <View
+              style={[
+                styles.divider,
+                { flex: 0, borderColor: Theme.colors.secondary },
+              ]}
+            ></View>
+            <View style={{ flex: 1 }}>
               <Text
                 style={{
-                  fontWeight: 600,
-                  fontSize: Theme.typography.md,
-                  color: Theme.colors.bgSecondary,
+                  fontSize: Theme.typography.sm,
+                  color: Theme.colors.secondary,
+                  marginLeft: 20,
                 }}
               >
                 Despesas
               </Text>
               <Text
                 style={{
-                  fontSize: Theme.typography.xl,
+                  fontSize: Theme.typography.lg,
                   fontWeight: 800,
                   marginTop: 4,
-                  color: "red",
+                  color: Theme.colors.white,
+                  marginLeft: 20,
                 }}
               >
                 {(data?.expenses ?? 0).toLocaleString("pt-BR", {
@@ -138,7 +152,7 @@ export default function DashboardScreen() {
           </View>
         </View>
 
-        <View style={{ marginTop: 40 }}>
+        {/* <View style={{ marginTop: 40 }}>
           <View
             style={{
               display: "flex",
@@ -210,15 +224,45 @@ export default function DashboardScreen() {
           ) : (
             <WeekIncomeChart />
           )}
+        </View> */}
+
+        <View style={{ marginTop: 40 }}>
+          <View
+            style={[
+              styles.row,
+              { marginBottom: 20, justifyContent: "space-between" },
+            ]}
+          >
+            <Text style={[styles.text, { fontWeight: 600 }]}>
+              Próximos Pagamentos
+            </Text>
+            <TouchableOpacity>
+              <Text style={styles.text}>
+                Ver tudo <ChevronRight color={Theme.colors.white} size={12} />
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <UpcomingExpensesList />
         </View>
 
         <View style={{ marginTop: 40 }}>
-          <Text style={[styles.text, { marginBottom: 20, fontWeight: 600 }]}>
-            Movimentações recentes
-          </Text>
+          <View
+            style={[
+              styles.row,
+              { marginBottom: 20, justifyContent: "space-between" },
+            ]}
+          >
+            <Text style={[styles.text, { fontWeight: 600 }]}>
+              Últimas Movimentações
+            </Text>
+            <TouchableOpacity>
+              <Text style={styles.text}>
+                Ver tudo <ChevronRight color={Theme.colors.white} size={12} />
+              </Text>
+            </TouchableOpacity>
+          </View>
           <LatestTransactionsList />
         </View>
-        {/* <Button onPress={signOut} title="Logout" /> */}
       </ScrollView>
     </View>
   );

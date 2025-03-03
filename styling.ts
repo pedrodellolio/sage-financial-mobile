@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Theme.colors.background,
-    padding: 20,
+    paddingInline: 20,
     paddingTop: 60,
     gap: 28,
   },
@@ -70,9 +70,26 @@ export const styles = StyleSheet.create({
     gap: 20,
   },
   divider: {
-    borderWidth: 1,
+    borderWidth: 0.5,
     width: 1,
     height: "100%",
     borderColor: Theme.colors.bgSecondary,
+  },
+  card: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 2,
+    backgroundColor: Theme.colors.bgSecondary,
+    borderRadius: Theme.radius.lg,
+    padding: 12,
+    paddingInline: 18,
+  },
+  row: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 20,
   },
 });

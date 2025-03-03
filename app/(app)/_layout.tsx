@@ -1,6 +1,6 @@
 import { useSession } from "@/hooks/use-session";
-import { Redirect, router, Tabs } from "expo-router";
-import { Home, Book, Plus, Goal, Calendar, Bell } from "lucide-react-native";
+import { Redirect, Tabs } from "expo-router";
+import { Home, Book, Goal, Bell, User, Users } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text } from "react-native";
 import { Theme } from "@/constants/theme";
@@ -34,29 +34,31 @@ export default function AppLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Início",
           tabBarIcon: ({ color }) => <Home size={22} color={color} />,
         }}
       />
       <Tabs.Screen
         name="transactions"
         options={{
-          title: "Movimentações",
           tabBarIcon: ({ color }) => <Book size={22} color={color} />,
         }}
       />
       <Tabs.Screen
         name="goals"
         options={{
-          title: "Metas",
           tabBarIcon: ({ color }) => <Goal size={22} color={color} />,
         }}
       />
       <Tabs.Screen
         name="reminders"
         options={{
-          title: "Lembretes",
           tabBarIcon: ({ color }) => <Bell size={22} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="(user)"
+        options={{
+          tabBarIcon: ({ color }) => <User size={22} color={color} />,
         }}
       />
     </Tabs>

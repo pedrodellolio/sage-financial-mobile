@@ -21,8 +21,17 @@ export default function RecalculateWalletButton({ month, year }: Props) {
   });
 
   return (
-    <TouchableOpacity onPress={() => mutateAsync()}>
-      <RefreshCcw color={Theme.colors.white} />
+    <TouchableOpacity
+      style={{
+        width: 24,
+        height: 24,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+      onPress={() => mutateAsync()}
+    >
+      <RefreshCcw color={Theme.colors.white} size={20} />
     </TouchableOpacity>
   );
 }

@@ -3,7 +3,7 @@ import { Theme } from "@/constants/theme";
 import { TransactionType } from "@/models/transaction";
 import { deleteTransaction } from "@/services/transactions";
 import { styles } from "@/styling";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
 import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
@@ -18,10 +18,12 @@ type Params = {
 
 export default function DetailsTransactionsModal() {
   const params: Params = useLocalSearchParams();
+  const queryClient = useQueryClient();
 
   const { mutateAsync } = useMutation({
     mutationFn: (transactionId: string) => deleteTransaction(transactionId),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["summary"] });
       router.replace("/(app)/transactions");
     },
   });

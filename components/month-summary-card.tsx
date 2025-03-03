@@ -17,7 +17,7 @@ export default function MonthSummaryCard({ month, year }: Props) {
     queryKey: ["summary", month, year],
     queryFn: () => getSummary(month, year),
   });
-console.log(data);
+
   if (isLoading) return <Text>Carregando...</Text>;
   if (error) return <Text>Ocorreu um erro.</Text>;
   return (
@@ -40,7 +40,7 @@ console.log(data);
             { fontSize: Theme.typography.xl, fontWeight: 600 },
           ]}
         >
-          {(data && data.income ? data.income : 0).toLocaleString("pt-BR", {
+          {(data?.income ?? 0).toLocaleString("pt-BR", {
             style: "currency",
             currency: "BRL",
           })}
@@ -58,7 +58,7 @@ console.log(data);
           ]}
         >
           -
-          {(data && data.expenses ? data.expenses : 0).toLocaleString("pt-BR", {
+          {(data?.expenses ?? 0).toLocaleString("pt-BR", {
             style: "currency",
             currency: "BRL",
           })}

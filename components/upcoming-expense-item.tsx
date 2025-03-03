@@ -7,7 +7,7 @@ interface Props {
   data: Transaction;
 }
 
-export default function TransactionsItem({ data }: Props) {
+export default function UpcomingExpenseItem({ data }: Props) {
   return (
     <View
       style={styles.card}
