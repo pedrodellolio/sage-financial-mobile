@@ -8,6 +8,7 @@ import { styles } from "@/styling";
 import { useQuery } from "@tanstack/react-query";
 import { DimensionValue, Text, View } from "react-native";
 import ProgressBar from "./progress-bar";
+import { capitalize } from "@/utils/format";
 
 interface Props {
   data: BudgetGoal;
@@ -60,7 +61,7 @@ export default function BudgetGoalItem({ data, month, year }: Props) {
         }}
       >
         <Text style={[styles.text, { fontSize: Theme.typography.sm }]}>
-          {data.label.title}
+          {capitalize(data.label.title)}
         </Text>
         {isWalletLoading || isTotalLoading ? (
           <Text>Carregando...</Text>

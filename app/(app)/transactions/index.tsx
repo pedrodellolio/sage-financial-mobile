@@ -112,6 +112,7 @@ export default function TransactionsScreen() {
                     occurredAt: transaction.occurredAt,
                     type: transaction.type,
                     valueBrl: transaction.valueBrl,
+                    labelTitle: transaction.label?.title
                   },
                 })
               }

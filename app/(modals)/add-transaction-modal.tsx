@@ -62,10 +62,7 @@ export default function AddTransactionsModal() {
       setValue("occurredAt", new Date(data.occurredAt));
       setValue("valueBrl", data.valueBrl.toLocaleString("pt-BR"));
       setValue("type", data.type);
-      setValue(
-        "label",
-        data.label && { id: data.label.id, title: data.label.title }
-      );
+      setValue("label", data.label ?? undefined);
     }
   }, [data]);
 
@@ -205,7 +202,9 @@ export default function AddTransactionsModal() {
                 }}
               >
                 <ChipButton
-                  onPress={() => onChange(today)}
+                  onPress={() => {
+                    onChange(today);
+                  }}
                   title="Hoje"
                   buttonStyle={{
                     backgroundColor: compareDates(value, today)

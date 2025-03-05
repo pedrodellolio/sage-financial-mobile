@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { DimensionValue, Text, View } from "react-native";
 import ProgressBar from "./progress-bar";
 import { Label } from "@/models/label";
+import { capitalize } from "@/utils/format";
 
 interface Props {
   data: Label;
@@ -36,7 +37,7 @@ export default function LabelItem({ data }: Props) {
         }}
       >
         <Text style={[styles.text, { fontSize: Theme.typography.sm }]}>
-          {data.title}
+          {capitalize(data.title)}
         </Text>
       </View>
     </View>

@@ -6,7 +6,7 @@ export interface Transaction {
   valueBrl: number;
   type: TransactionType;
   occurredAt: string;
-  label: Label;
+  label: Label | null;
 }
 
 export enum TransactionType {

@@ -14,16 +14,12 @@ export default function TransactionsLayout() {
         name="add-transaction-modal"
         options={{
           presentation: "modal",
-          headerShown: true,
-          headerLeft: () => <ChevronLeft />,
         }}
       />
       <Stack.Screen
         name="details-transaction-modal"
         options={{
           presentation: "modal",
-          headerShown: true,
-          headerLeft: () => <ChevronLeft />,
         }}
       />
     </Stack>

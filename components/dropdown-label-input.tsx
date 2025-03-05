@@ -28,7 +28,7 @@ const DropdownLabelInput = ({
     queryKey: ["labels", fromBudgetGoal ?? false, month, year],
     queryFn: () => getLabels(fromBudgetGoal ?? false, month, year),
   });
-  console.log(fromBudgetGoal ?? false, month, year);
+  // console.log(fromBudgetGoal ?? false, month, year);
 
   if (isLoading) return <Text>Loading...</Text>;
   if (error) return <Text>Error loading labels</Text>;

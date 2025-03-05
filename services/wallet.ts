@@ -13,6 +13,18 @@ export async function syncWallet(month: number, year: number) {
   }
 }
 
+export async function getWalletsByPeriod(start: Date, end: Date) {
+  try {
+    const response = await api.get<Wallet[]>(`wallet/get-by-period`, {
+      params: { start, end },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching wallets:", error);
+    throw error;
+  }
+}
+
 export async function getWalletByMonthAndYear(
   month: number,
   year: number

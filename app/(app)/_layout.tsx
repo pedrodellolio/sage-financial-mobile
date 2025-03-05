@@ -32,7 +32,7 @@ export default function AppLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="(home)"
         options={{
           tabBarIcon: ({ color }) => <Home size={22} color={color} />,
         }}

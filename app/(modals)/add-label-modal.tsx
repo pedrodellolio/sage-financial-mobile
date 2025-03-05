@@ -32,7 +32,6 @@ type Params = {
 
 export default function AddLabelModal() {
   const params: Params = useLocalSearchParams();
-  console.log(params.id);
   const { data, isLoading, error } = useQuery<Label>({
     queryKey: ["label", params.id],
     queryFn: () => getLabelById(params.id),
@@ -48,7 +47,6 @@ export default function AddLabelModal() {
     resolver: zodResolver(addLabelSchema),
   });
 
-  console.log(data);
   useEffect(() => {
     if (data) {
       setValue("title", data.title);

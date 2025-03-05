@@ -10,6 +10,7 @@ import { DimensionValue, Text, View } from "react-native";
 import ProgressBar from "./progress-bar";
 import { Label } from "@/models/label";
 import { Profile } from "@/models/profile";
+import { capitalize } from "@/utils/format";
 
 interface Props {
   data: Profile;
@@ -37,7 +38,7 @@ export default function ProfileItem({ data }: Props) {
         }}
       >
         <Text style={[styles.text, { fontSize: Theme.typography.sm }]}>
-          {data.title}
+          {capitalize(data.title)}
         </Text>
       </View>
     </View>

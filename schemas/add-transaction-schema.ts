@@ -11,6 +11,7 @@ export const addTransactionSchema = z.object({
       title: z.string(),
     })
     .optional(),
+    // .nullable(),
   occurredAt: z.date({
     required_error: "Date is required",
     invalid_type_error: "Invalid date format",

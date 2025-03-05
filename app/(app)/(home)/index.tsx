@@ -3,14 +3,18 @@ import WeekIncomeChart from "@/components/charts/week-income-chart";
 import Header from "@/components/header";
 import LatestTransactionsList from "@/components/latest-transactions-list";
 import RecalculateWalletButton from "@/components/recalculate-wallet-button";
+import SeeMoreButton from "@/components/see-more-button";
 import UpcomingExpensesList from "@/components/upcoming-expenses-list";
 import { Theme } from "@/constants/theme";
+import { useSession } from "@/hooks/use-session";
 import { Summary } from "@/models/summary";
 import { TransactionType } from "@/models/transaction";
+import { signOut } from "@/services/auth";
 import { getSummary } from "@/services/wallet";
 import { styles } from "@/styling";
 import { currentMonth, currentYear } from "@/utils/date";
 import { useQuery } from "@tanstack/react-query";
+import { router } from "expo-router";
 import { ChevronRight, Plus } from "lucide-react-native";
 import { useState } from "react";
 import {
@@ -22,9 +26,6 @@ import {
 } from "react-native";
 
 export default function DashboardScreen() {
-  const [chartType, setChartType] = useState<TransactionType>(
-    TransactionType.EXPENSE
-  );
   const { data, isLoading, error } = useQuery<Summary>({
     queryKey: ["summary", currentMonth, currentYear],
     queryFn: () => getSummary(currentMonth, currentYear),
@@ -54,7 +55,10 @@ export default function DashboardScreen() {
               borderRadius: Theme.radius.lg,
             }}
           >
-            <View style={[styles.row, { justifyContent: "space-between" }]}>
+            <TouchableOpacity
+              style={[styles.row, { justifyContent: "space-between" }]}
+              onPress={() => router.push("/(app)/(home)/dashboard")}
+            >
               <View>
                 <Text
                   style={{
@@ -79,10 +83,8 @@ export default function DashboardScreen() {
                   })}
                 </Text>
               </View>
-              <TouchableOpacity>
-                <ChevronRight color={Theme.colors.white} />
-              </TouchableOpacity>
-            </View>
+              <ChevronRight color={Theme.colors.white} />
+            </TouchableOpacity>
           </View>
 
           <View
@@ -236,11 +238,7 @@ export default function DashboardScreen() {
             <Text style={[styles.text, { fontWeight: 600 }]}>
               Próximos Pagamentos
             </Text>
-            <TouchableOpacity>
-              <Text style={styles.text}>
-                Ver tudo <ChevronRight color={Theme.colors.white} size={12} />
-              </Text>
-            </TouchableOpacity>
+            <SeeMoreButton />
           </View>
           <UpcomingExpensesList />
         </View>
@@ -255,11 +253,7 @@ export default function DashboardScreen() {
             <Text style={[styles.text, { fontWeight: 600 }]}>
               Últimas Movimentações
             </Text>
-            <TouchableOpacity>
-              <Text style={styles.text}>
-                Ver tudo <ChevronRight color={Theme.colors.white} size={12} />
-              </Text>
-            </TouchableOpacity>
+            <SeeMoreButton />
           </View>
           <LatestTransactionsList />
         </View>

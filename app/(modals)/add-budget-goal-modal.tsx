@@ -58,8 +58,6 @@ export default function AddBudgetGoalModal() {
     },
   });
 
-  console.log(data);
-
   const selectedType = watch("type");
   useEffect(() => {
     if (data) {

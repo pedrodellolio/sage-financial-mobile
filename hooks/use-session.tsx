@@ -67,7 +67,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   const changeProfile = async (profile: Profile) => {
     await AsyncStorage.setItem("profile", JSON.stringify(profile));
     setProfile(profile);
-    console.log(profile);
+    // console.log(profile);
   };
 
   return (

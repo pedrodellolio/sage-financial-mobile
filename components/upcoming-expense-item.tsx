@@ -1,6 +1,7 @@
 import { Theme } from "@/constants/theme";
 import { Transaction, TransactionType } from "@/models/transaction";
 import { styles } from "@/styling";
+import { capitalize } from "@/utils/format";
 import { Text, View } from "react-native";
 
 interface Props {
@@ -19,7 +20,7 @@ export default function UpcomingExpenseItem({ data }: Props) {
           gap: 4,
         }}
       >
-        <Text style={[styles.text, {fontSize: Theme.typography.sm}]}>{data.title}</Text>
+        <Text style={[styles.text, {fontSize: Theme.typography.sm}]}>{capitalize(data.title)}</Text>
 
         <Text
           style={[

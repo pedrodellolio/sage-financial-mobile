@@ -1,6 +1,7 @@
 import { Theme } from "@/constants/theme";
 import { Transaction, TransactionType } from "@/models/transaction";
 import { styles } from "@/styling";
+import { capitalize } from "@/utils/format";
 import { Text, View } from "react-native";
 
 interface Props {
@@ -9,9 +10,7 @@ interface Props {
 
 export default function TransactionsItem({ data }: Props) {
   return (
-    <View
-      style={styles.card}
-    >
+    <View style={styles.card}>
       <View
         style={{
           display: "flex",
@@ -19,7 +18,9 @@ export default function TransactionsItem({ data }: Props) {
           gap: 4,
         }}
       >
-        <Text style={[styles.text, {fontSize: Theme.typography.sm}]}>{data.title}</Text>
+        <Text style={[styles.text, { fontSize: Theme.typography.sm }]}>
+          {capitalize(data.title)}
+        </Text>
 
         <Text
           style={[

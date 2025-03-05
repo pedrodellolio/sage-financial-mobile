@@ -21,7 +21,6 @@ export default function WeekExpensesChart() {
     return formatExpensesChart(data);
   }, [data]);
 
-
   if (isLoading) return <Text>Carregando...</Text>;
   if (error) return <Text>Ocorreu um erro.</Text>;
   return (
@@ -33,7 +32,7 @@ export default function WeekExpensesChart() {
         backgroundColor: Theme.colors.bgSecondary,
         borderRadius: Theme.radius.lg,
         marginTop: 10,
-        paddingBlock: 14
+        paddingBlock: 14,
       }}
     >
       <BarChart
