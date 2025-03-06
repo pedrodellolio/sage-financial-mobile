@@ -1,38 +1,22 @@
 import { Theme } from "@/constants/theme";
 import { Label } from "@/models/label";
-import { getLabels } from "@/services/label";
+import { RecurrenceType, toRecurrenceType } from "@/models/transaction";
 import { styles } from "@/styling";
-import { useQuery } from "@tanstack/react-query";
-import { Tag } from "lucide-react-native";
+import { Clock } from "lucide-react-native";
 import React, { useState } from "react";
-import { StyleSheet, View, Text, StyleProp, ViewStyle } from "react-native";
+import { StyleSheet, View, StyleProp, ViewStyle } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
 interface Props {
-  value?: Label;
-  onChange: (value: Label) => void;
-  month: number;
-  year: number;
-  fromBudgetGoal?: boolean;
+  options: { title: string; id: number }[];
+  value: string;
+  onChange: (value: string) => void;
   style?: StyleProp<ViewStyle>;
 }
 
-const DropdownLabelInput = ({
-  value,
-  onChange,
-  month,
-  year,
-  fromBudgetGoal,
-  style,
-}: Props) => {
+const DropdownInput = ({ options, value, onChange, style }: Props) => {
   const [isFocus, setIsFocus] = useState(false);
-  const { data, isLoading, error } = useQuery<Label[]>({
-    queryKey: ["labels", fromBudgetGoal ?? false, month, year],
-    queryFn: () => getLabels(fromBudgetGoal ?? false, month, year),
-  });
 
-  if (isLoading) return <Text>Loading...</Text>;
-  if (error) return <Text>Error loading labels</Text>;
   return (
     <View>
       <Dropdown
@@ -48,27 +32,33 @@ const DropdownLabelInput = ({
         itemTextStyle={styles.text}
         containerStyle={styleSheet.container}
         iconStyle={styleSheet.iconStyle}
-        data={data ?? []}
-        search
+        data={options}
         maxHeight={300}
         labelField="title"
         valueField="id"
-        placeholder={!isFocus ? "Selecione uma categoria" : "..."}
+        placeholder={!isFocus ? "Selecione..." : "..."}
         searchPlaceholder="Buscar..."
-        value={value}
+        value={{
+          title: value,
+          id: RecurrenceType.options.indexOf(
+            value as "WEEKLY" | "BIWEEKLY" | "MONTHLY"
+          ),
+        }}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
         onChange={(item) => {
-          onChange({ id: item.id, title: item.title });
+          onChange(toRecurrenceType(item.title));
           setIsFocus(false);
         }}
-        renderLeftIcon={() => <Tag color={Theme.colors.secondary} size={18} />}
+        renderLeftIcon={() => (
+          <Clock color={Theme.colors.secondary} size={18} />
+        )}
       />
     </View>
   );
 };
 
-export default DropdownLabelInput;
+export default DropdownInput;
 
 const styleSheet = StyleSheet.create({
   container: {

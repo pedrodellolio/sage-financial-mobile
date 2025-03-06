@@ -27,7 +27,7 @@ export default function Index({}: Props) {
 
   const onSubmit = async (data: LoginFormData) => {
     await signInWithEmail(data.email, data.password);
-    router.replace("/(app)");
+    router.replace("/(app)/(home)");
   };
 
   return (

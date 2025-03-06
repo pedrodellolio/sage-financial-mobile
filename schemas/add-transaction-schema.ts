@@ -1,21 +1,22 @@
-import { TransactionType } from "@/models/transaction";
+import { RecurrenceType, TransactionType } from "@/models/transaction";
 import { z } from "zod";
 
 export const addTransactionSchema = z.object({
   title: z.string().min(1, "Título é obrigatório"),
   valueBrl: z.string().min(1, "Valor é obrigatória"),
-  type: z.nativeEnum(TransactionType),
+  type: TransactionType,
   label: z
     .object({
       id: z.string(),
       title: z.string(),
     })
     .optional(),
-    // .nullable(),
-  occurredAt: z.date({
-    required_error: "Date is required",
-    invalid_type_error: "Invalid date format",
-  }),
+  // .nullable(),
+  occurredAt: z.coerce.date(),
+  // parentTransaction: z.object()
+  // installment: number;
+  // totalInstallments: number;
+  frequency: RecurrenceType,
 });
 
 export type AddTransactionFormData = z.infer<typeof addTransactionSchema>;

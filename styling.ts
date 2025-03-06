@@ -40,7 +40,8 @@ export const styles = StyleSheet.create({
     paddingLeft: 16,
     paddingTop: 16,
     paddingBottom: 16,
-    color: Theme.colors.white,
+    color: Theme.colors.black,
+    
   },
   errorInput: {
     borderColor: "red",

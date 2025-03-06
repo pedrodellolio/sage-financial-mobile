@@ -109,7 +109,7 @@ export default function TransactionsScreen() {
                   params: {
                     id: transaction.id,
                     title: transaction.title,
-                    occurredAt: transaction.occurredAt,
+                    occurredAt: transaction.occurredAt.toString(),
                     type: transaction.type,
                     valueBrl: transaction.valueBrl,
                     labelTitle: transaction.label?.title

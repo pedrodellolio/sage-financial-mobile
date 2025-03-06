@@ -119,7 +119,7 @@ export default function DetailsTransactionsModal() {
             Tipo
           </Text>
           <Text style={[styles.text]}>
-            {TransactionType[Number(params.type)] == "EXPENSE"
+            {TransactionType.options[Number(params.type)] == "EXPENSE"
               ? "Despesa"
               : "Receita"}
           </Text>
