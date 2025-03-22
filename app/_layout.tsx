@@ -39,7 +39,7 @@ const RootLayout = () => {
         <WalletProvider>
           <Slot />
         </WalletProvider>
-        <StatusBar style="light" />
+        <StatusBar style="auto" />
       </SessionProvider>
     </QueryClientProvider>
   );

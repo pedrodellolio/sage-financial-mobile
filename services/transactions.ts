@@ -74,12 +74,15 @@ export async function getTransactionsByPeriod(
 
 export async function postTransaction(transaction: AddTransactionFormData) {
   try {
+    console.log("post");
+
     return await api.post<Transaction>(`transaction`, {
       title: transaction.title,
       valueBrl: transaction.valueBrl,
       occurredAt: transaction.occurredAt,
       label: transaction.label ?? null,
       type: transaction.type,
+      frequency: transaction.frequency,
     });
   } catch (error) {
     console.error("Error fetching transactions:", error);
@@ -92,6 +95,7 @@ export async function updateTransaction(
   transaction: AddTransactionFormData
 ) {
   try {
+    console.log(transaction);
     return await api.put<Transaction>(`transaction`, {
       id: transactionId,
       title: transaction.title,
@@ -99,6 +103,7 @@ export async function updateTransaction(
       occurredAt: transaction.occurredAt,
       label: transaction.label,
       type: transaction.type,
+      frequency: transaction.frequency,
     });
   } catch (error) {
     console.error("Error fetching transactions:", error);

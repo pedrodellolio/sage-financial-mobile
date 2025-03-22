@@ -1,4 +1,5 @@
 import Header from "@/components/header";
+import Loading from "@/components/loading";
 import MonthSummaryCard from "@/components/month-summary-card";
 import RecalculateWalletButton from "@/components/recalculate-wallet-button";
 import TransactionsItem from "@/components/transaction-item";
@@ -8,18 +9,11 @@ import { Transaction } from "@/models/transaction";
 import { getTransactionsByMonthAndYear } from "@/services/transactions";
 import { styles } from "@/styling";
 import { currentMonth, currentYear } from "@/utils/date";
-import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react-native";
 import { useState } from "react";
-import {
-  Pressable,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 export default function TransactionsScreen() {
   const [selectedMonth, setSelectedMonth] = useState<number>(currentMonth - 1);
@@ -51,7 +45,7 @@ export default function TransactionsScreen() {
     });
   };
 
-  if (isLoading) return <Text>Loading...</Text>;
+  if (isLoading) return <Loading />;
   if (error) return <Text>Error loading transactions</Text>;
   return (
     <View style={[styles.container]}>
@@ -112,7 +106,8 @@ export default function TransactionsScreen() {
                     occurredAt: transaction.occurredAt.toString(),
                     type: transaction.type,
                     valueBrl: transaction.valueBrl,
-                    labelTitle: transaction.label?.title
+                    labelTitle: transaction.label?.title,
+                    frequency: transaction.frequency,
                   },
                 })
               }

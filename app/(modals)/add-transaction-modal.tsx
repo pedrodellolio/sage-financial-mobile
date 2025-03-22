@@ -2,6 +2,7 @@ import Header from "@/components/header";
 import { Theme } from "@/constants/theme";
 import {
   formatRecurrenceType,
+  RecurrenceOptions,
   RecurrenceType,
   toRecurrenceType,
   Transaction,
@@ -16,7 +17,7 @@ import { compareDates, today, tomorrow } from "@/utils/date";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router, useLocalSearchParams } from "expo-router";
 import { Calendar, ChevronDown, ChevronLeft } from "lucide-react-native";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
   Pressable,
@@ -35,9 +36,10 @@ import {
   postTransaction,
   updateTransaction,
 } from "@/services/transactions";
-import DropdownLabelInput from "@/components/dropdown-label-input";
-import DropdownInput from "@/components/dropdown-input";
 import { addDays, addMonths } from "date-fns";
+import Loading from "@/components/loading";
+import DropdownLabelInput from "@/components/dropdowns/dropdown-label-input";
+import DropdownRecurrenceInput from "@/components/dropdowns/dropdown-recurrence-input";
 
 type Params = {
   id: string;
@@ -66,21 +68,39 @@ export default function AddTransactionsModal() {
   } = useForm<AddTransactionFormData>({
     resolver: zodResolver(addTransactionSchema),
     defaultValues: {
-      type: TransactionType.enum.EXPENSE,
+      type: TransactionType.EXPENSE,
       occurredAt: today,
     },
   });
 
   useEffect(() => {
-    isRecurrent && setValue("frequency", RecurrenceType.enum.MONTHLY);
+    if (isRecurrent) {
+      setValue("totalInstallments", 0);
+      setValue("frequency", RecurrenceType.MONTHLY);
+      setIsInstallment(false);
+    } else {
+      setValue("frequency", undefined);
+    }
   }, [isRecurrent]);
 
+  useEffect(() => {
+    if (isInstallment) {
+      setValue("totalInstallments", 1);
+      setValue("frequency", RecurrenceType.MONTHLY);
+      setIsRecurrent(false);
+    } else {
+      setValue("totalInstallments", 0);
+      setValue("frequency", undefined);
+    }
+  }, [isInstallment]);
+
   const occurredAt = watch("occurredAt");
+  const totalInstallments = watch("totalInstallments");
   useEffect(() => {
     if (data) {
       setValue("title", data.title);
       setValue("occurredAt", new Date(data.occurredAt));
-      setValue("valueBrl", data.valueBrl.toLocaleString("pt-BR"));
+      setValue("valueBrl", data.valueBrl);
       setValue("type", data.type);
       setValue("label", data.label ?? undefined);
     }
@@ -114,20 +134,21 @@ export default function AddTransactionsModal() {
     });
   };
 
-  const calculateNextTransaction = (option: string) => {
+  const calculateNextTransaction = (option?: RecurrenceType) => {
     switch (option) {
-      case RecurrenceType.enum.BIWEEKLY:
+      case RecurrenceType.BIWEEKLY:
         return addDays(occurredAt, 14);
-      case RecurrenceType.enum.MONTHLY:
+      case RecurrenceType.MONTHLY:
         return addMonths(occurredAt, 1);
-      case RecurrenceType.enum.WEEKLY:
+      case RecurrenceType.WEEKLY:
         return addDays(occurredAt, 7);
       default:
         return occurredAt;
     }
   };
 
-  if (isLoading) return <Text>Loading...</Text>;
+  console.log(RecurrenceOptions);
+  if (isLoading) return <Loading />;
   if (error) return <Text>Error loading transaction</Text>;
   return (
     <View style={[styles.container, { flex: 1 }]}>
@@ -141,7 +162,10 @@ export default function AddTransactionsModal() {
           </TouchableOpacity>
         }
       />
-      <ScrollView>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        // style={{ marginBottom: 100 }}
+      >
         <View
           style={{
             display: "flex",
@@ -166,11 +190,11 @@ export default function AddTransactionsModal() {
                 }}
               >
                 <Pressable
-                  onPress={() => onChange(TransactionType.enum.EXPENSE)}
+                  onPress={() => onChange(TransactionType.EXPENSE)}
                   style={[
                     {
                       backgroundColor:
-                        value == TransactionType.enum.EXPENSE
+                        value == TransactionType.EXPENSE
                           ? Theme.colors.primary
                           : Theme.colors.bgSecondary,
                       padding: 10,
@@ -185,7 +209,7 @@ export default function AddTransactionsModal() {
                       {
                         textAlign: "center",
                         fontWeight:
-                          value == TransactionType.enum.EXPENSE ? 800 : 400,
+                          value == TransactionType.EXPENSE ? 800 : 400,
                       },
                     ]}
                   >
@@ -193,11 +217,11 @@ export default function AddTransactionsModal() {
                   </Text>
                 </Pressable>
                 <Pressable
-                  onPress={() => onChange(TransactionType.enum.INCOME)}
+                  onPress={() => onChange(TransactionType.INCOME)}
                   style={[
                     {
                       backgroundColor:
-                        value == TransactionType.enum.INCOME
+                        value == TransactionType.INCOME
                           ? Theme.colors.primary
                           : Theme.colors.bgSecondary,
                       padding: 10,
@@ -211,8 +235,7 @@ export default function AddTransactionsModal() {
                       styles.text,
                       {
                         textAlign: "center",
-                        fontWeight:
-                          value == TransactionType.enum.INCOME ? 800 : 400,
+                        fontWeight: value == TransactionType.INCOME ? 800 : 400,
                       },
                     ]}
                   >
@@ -338,7 +361,7 @@ export default function AddTransactionsModal() {
                   placeholder="R$0,00"
                   onBlur={onBlur}
                   onChangeText={onChange}
-                  value={value}
+                  value={value ? String(value) : ""}
                   placeholderTextColor={Theme.colors.secondary}
                 />
               </View>
@@ -373,7 +396,10 @@ export default function AddTransactionsModal() {
             <View style={[styles.row, { justifyContent: "space-between" }]}>
               <Text style={styles.text}>Recorrente</Text>
               <Switch
-                trackColor={{ false: "#767577", true: "#81b0ff" }}
+                trackColor={{
+                  false: Theme.colors.secondary,
+                  true: Theme.colors.bgSecondary,
+                }}
                 thumbColor={isRecurrent ? Theme.colors.primary : "#f4f3f4"}
                 ios_backgroundColor="#3e3e3e"
                 onValueChange={setIsRecurrent}
@@ -395,78 +421,156 @@ export default function AddTransactionsModal() {
                 },
               ]}
             >
-              <Text style={[styles.text, { flex: 1, marginBottom: 28 }]}>
-                Ocorre{" "}
-              </Text>
+              <Text style={[styles.text, { marginBottom: 28 }]}>Ocorre </Text>
               <Controller
                 control={control}
                 name="frequency"
-                render={({ field: { onChange, value } }) => (
+                render={({ field: { onChange, value, onBlur } }) => (
                   <View>
-                    <DropdownInput
-                      onChange={onChange}
-                      value={value}
-                      options={RecurrenceType.options.map((t, i) => {
-                        return {
-                          id: RecurrenceType.options.indexOf(t),
-                          title: formatRecurrenceType(t),
-                        };
-                      })}
-                      style={{ width: "100%", height: 48 }}
-                    />
-                    <Text
-                      style={[
-                        styles.text,
-                        {
-                          fontSize: Theme.typography.sm,
-                          color: Theme.colors.secondary,
-                          marginTop: 10,
-                        },
-                      ]}
-                    >
-                      Próxima cobrança será em{" "}
-                      {calculateNextTransaction(value).toLocaleDateString(
-                        "pt-BR"
-                      )}
-                    </Text>
+                    <View style={{ width: 220 }}>
+                      <DropdownRecurrenceInput
+                        onChange={onChange}
+                        value={value}
+                        options={RecurrenceOptions.map((t) => {
+                          return {
+                            id: RecurrenceOptions.indexOf(t),
+                            title: t,
+                          };
+                        })}
+                        style={{ height: 48 }}
+                      />
+                      <Text
+                        style={[
+                          styles.text,
+                          {
+                            fontSize: Theme.typography.sm,
+                            color: Theme.colors.secondary,
+                            marginTop: 10,
+                          },
+                        ]}
+                      >
+                        Próxima cobrança:{" "}
+                        {calculateNextTransaction(value).toLocaleDateString(
+                          "pt-BR"
+                        )}
+                      </Text>
+                    </View>
                   </View>
                 )}
               />
             </View>
+          </View>
 
-            {/* <View style={[styles.row, { justifyContent: "space-between" }]}>
+          <View style={{ display: showAdvancedOptions ? "flex" : "none" }}>
+            <View style={[styles.row, { justifyContent: "space-between" }]}>
               <Text style={styles.text}>Parcelado</Text>
               <Switch
-                trackColor={{ false: "#767577", true: "#81b0ff" }}
-                thumbColor={isRecurrent ? Theme.colors.primary : "#f4f3f4"}
+                trackColor={{
+                  false: Theme.colors.secondary,
+                  true: Theme.colors.bgSecondary,
+                }}
+                thumbColor={isInstallment ? Theme.colors.primary : "#f4f3f4"}
                 ios_backgroundColor="#3e3e3e"
-                onValueChange={setIsRecurrent}
-                value={isRecurrent}
+                onValueChange={setIsInstallment}
+                value={isInstallment}
               />
-            </View> */}
+            </View>
+
+            <View
+              style={[
+                styles.row,
+                {
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  display: isInstallment ? "flex" : "none",
+                  marginTop: 14,
+                  backgroundColor: Theme.colors.bgSecondary,
+                  borderRadius: Theme.radius.lg,
+                  padding: 20,
+                },
+              ]}
+            >
+              <View style={{ flex: 1, gap: 20 }}>
+                <Controller
+                  control={control}
+                  name="totalInstallments"
+                  render={({ field: { onChange, value, onBlur } }) => (
+                    <View style={[styles.row, { alignItems: "center" }]}>
+                      <Text style={[styles.text]}>Quantidade</Text>
+                      <TextInput
+                        style={[
+                          styles.input,
+                          errors.totalInstallments && styles.errorInput,
+                          { flex: 1 },
+                        ]}
+                        placeholder="1"
+                        maxLength={2}
+                        onBlur={onBlur}
+                        onChangeText={onChange}
+                        value={value ? String(value) : ""}
+                        placeholderTextColor={Theme.colors.secondary}
+                      />
+                    </View>
+                  )}
+                />
+
+                <Controller
+                  control={control}
+                  name="frequency"
+                  render={({ field: { onChange, value, onBlur } }) => (
+                    <View style={[styles.row, { alignItems: "center" }]}>
+                      <Text style={[styles.text]}>Frequência</Text>
+                      <DropdownRecurrenceInput
+                        onChange={onChange}
+                        value={value}
+                        options={RecurrenceOptions.map((t) => {
+                          return {
+                            id: RecurrenceOptions.indexOf(t),
+                            title: t,
+                          };
+                        })}
+                        style={{ height: 48 }}
+                      />
+                    </View>
+                  )}
+                />
+                <Text
+                  style={[
+                    styles.text,
+                    {
+                      fontSize: Theme.typography.sm,
+                      color: Theme.colors.secondary,
+                      marginTop: 10,
+                    },
+                  ]}
+                >
+                  Parcelado em {totalInstallments}
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          <View style={{ marginBottom: 20 }}>
+            <TouchableOpacity
+              style={[styles.button, { width: "100%" }]}
+              onPress={handleSubmit(onSubmit)}
+            >
+              <Text
+                style={[
+                  styles.text,
+                  {
+                    textAlign: "center",
+                    fontWeight: 800,
+                    fontSize: Theme.typography.md,
+                  },
+                ]}
+              >
+                {params.id ? "Salvar" : "Criar"}
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
-
-      <View style={styles.footer}>
-        <TouchableOpacity
-          style={[styles.button, { width: "100%" }]}
-          onPress={handleSubmit(onSubmit)}
-        >
-          <Text
-            style={[
-              styles.text,
-              {
-                textAlign: "center",
-                fontWeight: 800,
-                fontSize: Theme.typography.md,
-              },
-            ]}
-          >
-            {params.id ? "Salvar" : "Criar"}
-          </Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }

@@ -1,74 +1,82 @@
 import { Theme } from "@/constants/theme";
-import { useSession } from "@/hooks/use-session";
-import { Profile } from "@/models/profile";
-import { getProfiles } from "@/services/profile";
+import { Label } from "@/models/label";
+import {
+  formatRecurrenceType,
+  RecurrenceOptions,
+  RecurrenceType,
+  toRecurrenceType,
+} from "@/models/transaction";
 import { styles } from "@/styling";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Tag, Users } from "lucide-react-native";
+import { Clock } from "lucide-react-native";
 import React, { useState } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, StyleProp, ViewStyle } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
-interface Props {}
+interface Props {
+  options: { title: string; id: number }[];
+  value?: RecurrenceType;
+  onChange: (value: string) => void;
+  style?: StyleProp<ViewStyle>;
+}
 
-const DropdownProfileInput = ({}: Props) => {
-  const queryClient = useQueryClient();
-  const { profile, changeProfile } = useSession();
+const DropdownRecurrenceInput = ({
+  options,
+  value,
+  onChange,
+  style,
+}: Props) => {
   const [isFocus, setIsFocus] = useState(false);
-  const { data, isLoading, error } = useQuery<Profile[]>({
-    queryKey: ["profiles"],
-    queryFn: () => getProfiles(),
-  });
 
-  if (isLoading) return <Text>Loading...</Text>;
-  if (error) return <Text>Error loading profiles</Text>;
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Dropdown
         style={[
           styles.input,
-          { paddingTop: 8, paddingBottom: 8 },
           isFocus && { borderColor: Theme.colors.primary },
+          style,
         ]}
+        activeColor={Theme.colors.bgSecondary}
         placeholderStyle={[styleSheet.placeholderStyle]}
         selectedTextStyle={styleSheet.selectedTextStyle}
         inputSearchStyle={styleSheet.inputSearchStyle}
         itemTextStyle={styles.text}
         containerStyle={styleSheet.container}
         iconStyle={styleSheet.iconStyle}
-        data={data ?? []}
-        search
+        data={options}
         maxHeight={300}
         labelField="title"
         valueField="id"
         placeholder={!isFocus ? "Selecione..." : "..."}
         searchPlaceholder="Buscar..."
-        value={profile}
+        value={{
+          id: value,
+          title: value,
+        }}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
-        onChange={(item) => {
-          changeProfile({ id: item.id, title: item.title } as Profile);
-          queryClient.resetQueries();
+        onChange={(item: { title: string; id: number }) => {
+          onChange(String(toRecurrenceType(item.title)));
           setIsFocus(false);
         }}
         renderLeftIcon={() => (
-          <Users color={Theme.colors.secondary} size={18} />
+          <Clock color={Theme.colors.secondary} size={18} />
         )}
       />
     </View>
   );
 };
 
-export default DropdownProfileInput;
+export default DropdownRecurrenceInput;
 
 const styleSheet = StyleSheet.create({
   container: {
     backgroundColor: Theme.colors.background,
   },
   dropdown: {
-    borderColor: Theme.colors.white,
-    borderWidth: 1,
-    borderRadius: Theme.radius.lg,
+    height: 50,
+    borderColor: Theme.colors.border,
+    borderWidth: 0.5,
+    borderRadius: 8,
     paddingHorizontal: 8,
   },
   icon: {

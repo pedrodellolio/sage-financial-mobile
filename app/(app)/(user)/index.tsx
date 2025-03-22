@@ -1,26 +1,10 @@
-import BudgetGoalItem from "@/components/budget-goal-item";
-import DropdownProfileInput from "@/components/dropdown-profile-input";
-import Header from "@/components/header";
-import { MONTHS } from "@/constants/months";
+import DropdownProfileInput from "@/components/dropdowns/dropdown-profile-input";
 import { Theme } from "@/constants/theme";
 import { useSession } from "@/hooks/use-session";
-import { BudgetGoal } from "@/models/budgetGoal";
-import { Label } from "@/models/label";
-import { getBudgetGoalsByMonthAndYear } from "@/services/budgetGoals";
-import { getLabels } from "@/services/label";
 import { styles } from "@/styling";
-import { currentMonth, currentYear } from "@/utils/date";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Cog,
-  Plus,
-  Tag,
-  Users,
-} from "lucide-react-native";
-import { useState } from "react";
+import { ChevronRight, Cog, Tag, Users } from "lucide-react-native";
 import {
   ScrollView,
   StyleSheet,
@@ -42,7 +26,7 @@ export default function DrawerScreen() {
       style={[styles.container, { paddingBlock: 12 }]}
       showsVerticalScrollIndicator={false}
     >
-      <View style={[styleSheet.row, {marginTop: 10}]}>
+      <View style={[styleSheet.row, { marginTop: 10 }]}>
         <View style={styleSheet.avatar}>
           <Text
             style={[
@@ -51,7 +35,7 @@ export default function DrawerScreen() {
                 textAlign: "center",
                 margin: "auto",
                 fontWeight: 600,
-                fontSize: 1.5*Theme.typography.xl,
+                fontSize: 1.5 * Theme.typography.xl,
               },
             ]}
           >

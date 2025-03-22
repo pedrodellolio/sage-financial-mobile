@@ -1,29 +1,30 @@
-import WeekExpensesChart from "@/components/charts/week-expenses-chart";
-import WeekIncomeChart from "@/components/charts/week-income-chart";
+import DropdownProfileInput from "@/components/dropdowns/dropdown-profile-input";
 import Header from "@/components/header";
 import LatestTransactionsList from "@/components/latest-transactions-list";
+import Loading from "@/components/loading";
+import ProfilesList from "@/components/profiles-list";
 import RecalculateWalletButton from "@/components/recalculate-wallet-button";
 import SeeMoreButton from "@/components/see-more-button";
 import UpcomingExpensesList from "@/components/upcoming-expenses-list";
+import { MONTHS } from "@/constants/months";
 import { Theme } from "@/constants/theme";
-import { useSession } from "@/hooks/use-session";
+import { Profile } from "@/models/profile";
 import { Summary } from "@/models/summary";
-import { TransactionType } from "@/models/transaction";
-import { signOut } from "@/services/auth";
 import { getSummary } from "@/services/wallet";
 import { styles } from "@/styling";
 import { currentMonth, currentYear } from "@/utils/date";
+import { capitalize } from "@/utils/format";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { ChevronRight, Plus } from "lucide-react-native";
-import { useState } from "react";
-import {
-  Pressable,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+
+const currentProfile = async () => {
+  const profileJson = await AsyncStorage.getItem("profile");
+  const profile = profileJson && JSON.parse(profileJson);
+  return profile as Profile;
+};
 
 export default function DashboardScreen() {
   const { data, isLoading, error } = useQuery<Summary>({
@@ -31,15 +32,22 @@ export default function DashboardScreen() {
     queryFn: () => getSummary(currentMonth, currentYear),
   });
 
-  if (isLoading) return <Text>Loading...</Text>;
+  const {
+    data: profile,
+    isLoading: isLoadingProfile,
+    error: profileError,
+  } = useQuery<Profile>({
+    queryKey: ["profile"],
+    queryFn: () => currentProfile(),
+  });
+
+  if (isLoading) return <Loading />;
   if (error) return <Text>Error loading transactions</Text>;
   return (
     <View style={[styles.container]}>
       <Header
-        middle={"Início"}
-        left={
-          <RecalculateWalletButton month={currentMonth} year={currentYear} />
-        }
+        // middle={`${MONTHS[currentMonth - 1].short} ${currentYear}`}
+        left={<DropdownProfileInput />}
         right={
           <TouchableOpacity>
             <Plus color={Theme.colors.white} />
@@ -154,79 +162,20 @@ export default function DashboardScreen() {
           </View>
         </View>
 
-        {/* <View style={{ marginTop: 40 }}>
+        <View style={{ marginTop: 40 }}>
           <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: 10,
-              backgroundColor: Theme.colors.bgSecondary,
-              padding: 8,
-              borderRadius: Theme.radius.xl,
-            }}
+            style={[
+              styles.row,
+              { marginBottom: 20, justifyContent: "space-between" },
+            ]}
           >
-            <Pressable
-              onPress={() => setChartType(TransactionType.EXPENSE)}
-              style={[
-                {
-                  backgroundColor:
-                    chartType == TransactionType.EXPENSE
-                      ? Theme.colors.primary
-                      : Theme.colors.bgSecondary,
-                  padding: 6,
-                  flex: 1,
-                  borderRadius: Theme.radius.lg,
-                },
-              ]}
-            >
-              <Text
-                style={[
-                  styles.text,
-                  {
-                    textAlign: "center",
-                    fontWeight:
-                      chartType == TransactionType.EXPENSE ? 800 : 400,
-                  },
-                ]}
-              >
-                Despesas
-              </Text>
-            </Pressable>
-            <Pressable
-              onPress={() => setChartType(TransactionType.INCOME)}
-              style={[
-                {
-                  backgroundColor:
-                    chartType == TransactionType.INCOME
-                      ? Theme.colors.primary
-                      : Theme.colors.bgSecondary,
-                  padding: 6,
-                  flex: 1,
-                  borderRadius: Theme.radius.lg,
-                },
-              ]}
-            >
-              <Text
-                style={[
-                  styles.text,
-                  {
-                    textAlign: "center",
-                    fontWeight: chartType == TransactionType.INCOME ? 800 : 400,
-                  },
-                ]}
-              >
-                Receitas
-              </Text>
-            </Pressable>
+            <Text style={[styles.text, { fontWeight: 600 }]}>
+              Resumo por Perfil
+            </Text>
+            <SeeMoreButton />
           </View>
-          {chartType === TransactionType.EXPENSE ? (
-            <WeekExpensesChart />
-          ) : (
-            <WeekIncomeChart />
-          )}
-        </View> */}
+          <ProfilesList />
+        </View>
 
         <View style={{ marginTop: 40 }}>
           <View

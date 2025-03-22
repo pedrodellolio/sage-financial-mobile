@@ -1,6 +1,10 @@
 import { Theme } from "@/constants/theme";
 import { Label } from "@/models/label";
-import { RecurrenceType, toRecurrenceType } from "@/models/transaction";
+import {
+  RecurrenceOptions,
+  RecurrenceType,
+  toRecurrenceType,
+} from "@/models/transaction";
 import { styles } from "@/styling";
 import { Clock } from "lucide-react-native";
 import React, { useState } from "react";
@@ -9,12 +13,12 @@ import { Dropdown } from "react-native-element-dropdown";
 
 interface Props {
   options: { title: string; id: number }[];
-  value: string;
+  value?: RecurrenceType;
   onChange: (value: string) => void;
   style?: StyleProp<ViewStyle>;
 }
 
-const DropdownInput = ({ options, value, onChange, style }: Props) => {
+const DropdownInstallmentInput = ({ options, value, onChange, style }: Props) => {
   const [isFocus, setIsFocus] = useState(false);
 
   return (
@@ -39,15 +43,13 @@ const DropdownInput = ({ options, value, onChange, style }: Props) => {
         placeholder={!isFocus ? "Selecione..." : "..."}
         searchPlaceholder="Buscar..."
         value={{
+          id: value,
           title: value,
-          id: RecurrenceType.options.indexOf(
-            value as "WEEKLY" | "BIWEEKLY" | "MONTHLY"
-          ),
         }}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
         onChange={(item) => {
-          onChange(toRecurrenceType(item.title));
+          onChange(RecurrenceType[item.title]);
           setIsFocus(false);
         }}
         renderLeftIcon={() => (
@@ -58,7 +60,7 @@ const DropdownInput = ({ options, value, onChange, style }: Props) => {
   );
 };
 
-export default DropdownInput;
+export default DropdownInstallmentInput;
 
 const styleSheet = StyleSheet.create({
   container: {

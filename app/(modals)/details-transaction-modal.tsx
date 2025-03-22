@@ -1,6 +1,10 @@
 import Header from "@/components/header";
 import { Theme } from "@/constants/theme";
-import { TransactionType } from "@/models/transaction";
+import {
+  formatRecurrenceType,
+  RecurrenceType,
+  TransactionType,
+} from "@/models/transaction";
 import { deleteTransaction } from "@/services/transactions";
 import { styles } from "@/styling";
 import { capitalize } from "@/utils/format";
@@ -14,6 +18,7 @@ type Params = {
   title: string;
   valueBrl: string;
   occurredAt: string;
+  frequency: string;
   type: string;
   labelTitle: string;
 };
@@ -119,9 +124,7 @@ export default function DetailsTransactionsModal() {
             Tipo
           </Text>
           <Text style={[styles.text]}>
-            {TransactionType.options[Number(params.type)] == "EXPENSE"
-              ? "Despesa"
-              : "Receita"}
+            {params.type == "EXPENSE" ? "Despesa" : "Receita"}
           </Text>
         </View>
 
@@ -156,12 +159,42 @@ export default function DetailsTransactionsModal() {
           <Text style={[styles.text, { color: Theme.colors.secondary }]}>
             Categoria
           </Text>
-          <View style={[styles.chipButton, {paddingHorizontal: 20}]}>
-            <Text style={[styles.text, { fontSize: Theme.typography.sm, fontWeight: 600 }]}>
+          <View style={[styles.chipButton, { paddingHorizontal: 20 }]}>
+            <Text
+              style={[
+                styles.text,
+                { fontSize: Theme.typography.sm, fontWeight: 600 },
+              ]}
+            >
               {capitalize(params.labelTitle)}
             </Text>
           </View>
         </View>
+        {params.frequency && (
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingTop: 40,
+            }}
+          >
+            <Text style={[styles.text, { color: Theme.colors.secondary }]}>
+              Recorrência
+            </Text>
+            <View style={[styles.chipButton, { paddingHorizontal: 20 }]}>
+              <Text
+                style={[
+                  styles.text,
+                  { fontSize: Theme.typography.sm, fontWeight: 600 },
+                ]}
+              >
+                {formatRecurrenceType(Number(params.frequency))}
+              </Text>
+            </View>
+          </View>
+        )}
       </ScrollView>
       <View
         style={[

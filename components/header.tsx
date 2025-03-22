@@ -13,7 +13,7 @@ export default function Header({ left, middle, right }: Props) {
   return (
     <View style={styles.header}>
       {left ? (
-        <View style={styles.icon}>{left}</View>
+        <View style={[styles.icon]}>{left}</View>
       ) : (
         <View style={(styles.icon, { width: 40, height: 14 })}></View>
       )}

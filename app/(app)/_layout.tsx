@@ -24,6 +24,7 @@ export default function AppLayout() {
         tabBarStyle: {
           backgroundColor: Theme.colors.background,
           paddingTop: 4,
+          borderColor: Theme.colors.bgSecondary
         },
         headerStyle: {
           backgroundColor: Theme.colors.background,
@@ -34,31 +35,56 @@ export default function AppLayout() {
       <Tabs.Screen
         name="(home)"
         options={{
-          tabBarIcon: ({ color }) => <Home size={22} color={color} />,
+          tabBarIcon: ({ focused }) => (
+            <Home
+              size={22}
+              color={focused ? Theme.colors.primary : Theme.colors.secondary}
+            />
+          ),
         }}
       />
       <Tabs.Screen
         name="transactions"
         options={{
-          tabBarIcon: ({ color }) => <Book size={22} color={color} />,
+          tabBarIcon: ({ focused }) => (
+            <Book
+              size={22}
+              color={focused ? Theme.colors.primary : Theme.colors.secondary}
+            />
+          ),
         }}
       />
       <Tabs.Screen
         name="goals"
         options={{
-          tabBarIcon: ({ color }) => <Goal size={22} color={color} />,
+          tabBarIcon: ({ focused }) => (
+            <Goal
+              size={22}
+              color={focused ? Theme.colors.primary : Theme.colors.secondary}
+            />
+          ),
         }}
       />
       <Tabs.Screen
         name="reminders"
         options={{
-          tabBarIcon: ({ color }) => <Bell size={22} color={color} />,
+          tabBarIcon: ({ focused }) => (
+            <Bell
+              size={22}
+              color={focused ? Theme.colors.primary : Theme.colors.secondary}
+            />
+          ),
         }}
       />
       <Tabs.Screen
         name="(user)"
         options={{
-          tabBarIcon: ({ color }) => <User size={22} color={color} />,
+          tabBarIcon: ({ focused }) => (
+            <User
+              size={22}
+              color={focused ? Theme.colors.primary : Theme.colors.secondary}
+            />
+          ),
         }}
       />
     </Tabs>

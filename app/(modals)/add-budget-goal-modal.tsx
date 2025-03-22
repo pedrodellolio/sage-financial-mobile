@@ -26,8 +26,8 @@ import {
   updateBudgetGoal,
 } from "@/services/budgetGoals";
 import { BudgetGoal, BudgetGoalType } from "@/models/budgetGoal";
-import DropdownLabelInput from "@/components/dropdown-label-input";
 import { Label } from "@/models/label";
+import DropdownLabelInput from "@/components/dropdowns/dropdown-label-input";
 
 type Params = {
   id: string;

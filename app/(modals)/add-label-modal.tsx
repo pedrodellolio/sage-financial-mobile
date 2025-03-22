@@ -6,16 +6,8 @@ import { router, useLocalSearchParams } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import {
-  Alert,
-  Pressable,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import DropdownLabelInput from "@/components/dropdown-label-input";
 import { Label } from "@/models/label";
 import { AddLabelFormData, addLabelSchema } from "@/schemas/add-label-schema";
 import {

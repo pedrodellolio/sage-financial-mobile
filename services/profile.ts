@@ -1,6 +1,8 @@
 import { AddProfileFormData } from "@/schemas/add-profile-schema";
 import api from "./axios-config";
 import { Profile } from "@/models/profile";
+import { ProfileBalance } from "@/models/profileBalance";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export interface AddProfileDto {
   title: string;
@@ -10,6 +12,21 @@ export async function getProfiles(): Promise<Profile[]> {
   try {
     const response = await api.get<Profile[]>(`profile/all`);
     return response.data;
+  } catch (error) {
+    console.error("Error fetching profiles:", error);
+    throw error;
+  }
+}
+
+export async function getProfilesBalance(month: number, year: number) {
+  try {
+    const response = await api.get<ProfileBalance[]>(
+      `profile/all-profile-balance`,
+      { params: { month, year } }
+    );
+    const profileJson = await AsyncStorage.getItem("profile");
+    const profile = profileJson && JSON.parse(profileJson);
+    return response.data.filter(i => i.profile.id !== profile.id);
   } catch (error) {
     console.error("Error fetching profiles:", error);
     throw error;
