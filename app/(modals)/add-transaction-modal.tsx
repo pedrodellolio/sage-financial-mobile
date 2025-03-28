@@ -1,10 +1,9 @@
 import Header from "@/components/header";
 import { Theme } from "@/constants/theme";
 import {
-  formatRecurrenceType,
+  getRecurrenceTypeLabel,
   RecurrenceOptions,
   RecurrenceType,
-  toRecurrenceType,
   Transaction,
   TransactionType,
 } from "@/models/transaction";
@@ -17,7 +16,7 @@ import { compareDates, today, tomorrow } from "@/utils/date";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router, useLocalSearchParams } from "expo-router";
 import { Calendar, ChevronDown, ChevronLeft } from "lucide-react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
   Pressable,
@@ -70,32 +69,33 @@ export default function AddTransactionsModal() {
     defaultValues: {
       type: TransactionType.EXPENSE,
       occurredAt: today,
+      interestPercentage: 0,
     },
   });
 
   useEffect(() => {
     if (isRecurrent) {
       setValue("totalInstallments", 0);
-      setValue("frequency", RecurrenceType.MONTHLY);
+      setValue("frequency", data?.frequency ?? RecurrenceType.MONTHLY);
       setIsInstallment(false);
     } else {
-      setValue("frequency", undefined);
+      setValue("frequency", data?.frequency ?? undefined);
     }
   }, [isRecurrent]);
 
   useEffect(() => {
     if (isInstallment) {
-      setValue("totalInstallments", 1);
-      setValue("frequency", RecurrenceType.MONTHLY);
+      setValue("totalInstallments", data?.totalInstallments ?? 1);
+      setValue("frequency", data?.frequency ?? RecurrenceType.MONTHLY);
       setIsRecurrent(false);
     } else {
       setValue("totalInstallments", 0);
-      setValue("frequency", undefined);
+      setValue("frequency", data?.frequency ?? undefined);
     }
   }, [isInstallment]);
 
   const occurredAt = watch("occurredAt");
-  const totalInstallments = watch("totalInstallments");
+
   useEffect(() => {
     if (data) {
       setValue("title", data.title);
@@ -103,6 +103,13 @@ export default function AddTransactionsModal() {
       setValue("valueBrl", data.valueBrl);
       setValue("type", data.type);
       setValue("label", data.label ?? undefined);
+      if (data.frequency) {
+        setValue("frequency", data.frequency);
+        setIsInstallment(data.totalInstallments > 0);
+        setIsRecurrent(data.totalInstallments === 0);
+      }
+      setValue("interestPercentage", data.interestPercentage);
+      setValue("totalInstallments", data.totalInstallments);
     }
   }, [data]);
 
@@ -136,18 +143,17 @@ export default function AddTransactionsModal() {
 
   const calculateNextTransaction = (option?: RecurrenceType) => {
     switch (option) {
+      case RecurrenceType.WEEKLY:
+        return addDays(occurredAt, 7);
       case RecurrenceType.BIWEEKLY:
         return addDays(occurredAt, 14);
       case RecurrenceType.MONTHLY:
         return addMonths(occurredAt, 1);
-      case RecurrenceType.WEEKLY:
-        return addDays(occurredAt, 7);
       default:
         return occurredAt;
     }
   };
 
-  console.log(RecurrenceOptions);
   if (isLoading) return <Loading />;
   if (error) return <Text>Error loading transaction</Text>;
   return (
@@ -425,18 +431,13 @@ export default function AddTransactionsModal() {
               <Controller
                 control={control}
                 name="frequency"
-                render={({ field: { onChange, value, onBlur } }) => (
+                render={({ field: { onChange, value } }) => (
                   <View>
                     <View style={{ width: 220 }}>
                       <DropdownRecurrenceInput
                         onChange={onChange}
                         value={value}
-                        options={RecurrenceOptions.map((t) => {
-                          return {
-                            id: RecurrenceOptions.indexOf(t),
-                            title: t,
-                          };
-                        })}
+                        options={RecurrenceOptions}
                         style={{ height: 48 }}
                       />
                       <Text
@@ -503,6 +504,7 @@ export default function AddTransactionsModal() {
                           errors.totalInstallments && styles.errorInput,
                           { flex: 1 },
                         ]}
+                        keyboardType="number-pad"
                         placeholder="1"
                         maxLength={2}
                         onBlur={onBlur}
@@ -517,35 +519,58 @@ export default function AddTransactionsModal() {
                 <Controller
                   control={control}
                   name="frequency"
-                  render={({ field: { onChange, value, onBlur } }) => (
-                    <View style={[styles.row, { alignItems: "center" }]}>
-                      <Text style={[styles.text]}>Frequência</Text>
-                      <DropdownRecurrenceInput
-                        onChange={onChange}
-                        value={value}
-                        options={RecurrenceOptions.map((t) => {
-                          return {
-                            id: RecurrenceOptions.indexOf(t),
-                            title: t,
-                          };
-                        })}
-                        style={{ height: 48 }}
-                      />
+                  render={({ field: { onChange, value } }) => (
+                    <View>
+                      <View style={[styles.row, { alignItems: "center" }]}>
+                        <Text style={[styles.text]}>Frequência</Text>
+                        <DropdownRecurrenceInput
+                          onChange={onChange}
+                          value={value}
+                          options={RecurrenceOptions}
+                          style={{ height: 48 }}
+                        />
+                      </View>
                     </View>
                   )}
                 />
-                <Text
-                  style={[
-                    styles.text,
-                    {
-                      fontSize: Theme.typography.sm,
-                      color: Theme.colors.secondary,
-                      marginTop: 10,
-                    },
-                  ]}
-                >
-                  Parcelado em {totalInstallments}
-                </Text>
+
+                <Controller
+                  control={control}
+                  name="interestPercentage"
+                  render={({ field: { onChange, value, onBlur } }) => (
+                    <View style={{ display: "flex", alignItems: "flex-end" }}>
+                      <View style={[styles.row, { alignItems: "center" }]}>
+                        <Text style={[styles.text, { width: 75 }]}>Juros</Text>
+                        <TextInput
+                          style={[
+                            styles.input,
+                            errors.totalInstallments && styles.errorInput,
+                            { flex: 1 },
+                          ]}
+                          placeholder="0%"
+                          keyboardType="number-pad"
+                          maxLength={2}
+                          onBlur={onBlur}
+                          onChangeText={onChange}
+                          value={value ? String(value) : ""}
+                          placeholderTextColor={Theme.colors.secondary}
+                        />
+                      </View>
+                      <Text
+                        style={[
+                          styles.text,
+                          {
+                            fontSize: Theme.typography.sm,
+                            color: Theme.colors.secondary,
+                            marginTop: 10,
+                          },
+                        ]}
+                      >
+                        Será aplicado para todas as parcelas
+                      </Text>
+                    </View>
+                  )}
+                />
               </View>
             </View>
           </View>

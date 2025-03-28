@@ -11,6 +11,7 @@ export interface Transaction {
   installment: number;
   totalInstallments: number;
   frequency: RecurrenceType | null;
+  interestPercentage: number;
 }
 
 export enum TransactionType {
@@ -25,32 +26,26 @@ export enum RecurrenceType {
   YEARLY,
 }
 
-export const formatRecurrenceType = (option?: RecurrenceType) => {
-  switch (option) {
-    case RecurrenceType.BIWEEKLY:
-      return "Quinzenalmente";
-    case RecurrenceType.MONTHLY:
-      return "Mensalmente";
-    case RecurrenceType.WEEKLY:
-      return "Semanalmente";
-    default:
-      return "Mensalmente";
-  }
+const RecurrenceTypeMap: Record<RecurrenceType, string> = {
+  [RecurrenceType.WEEKLY]: "Semanal",
+  [RecurrenceType.BIWEEKLY]: "Quinzenal",
+  [RecurrenceType.MONTHLY]: "Mensal",
+  [RecurrenceType.YEARLY]: "Anual",
 };
 
-export const toRecurrenceType = (option: string) => {
-  switch (option) {
-    case "Quinzenalmente":
-      return RecurrenceType.BIWEEKLY;
-    case "Mensalmente":
-      return RecurrenceType.MONTHLY;
-    case "Semanalmente":
-      return RecurrenceType.WEEKLY;
-    default:
-      return RecurrenceType.MONTHLY;
-  }
+const ReverseRecurrenceTypeMap: Record<string, RecurrenceType> = Object.fromEntries(
+  Object.entries(RecurrenceTypeMap).map(([key, value]) => [value, Number(key) as RecurrenceType])
+);
+
+export const getRecurrenceTypeLabel = (type: RecurrenceType): string => {
+  return RecurrenceTypeMap[type] || "Mensal";
 };
 
-export const RecurrenceOptions = Object.keys(RecurrenceType)
-  .filter((key) => isNaN(Number(key)))
- 
+export const getRecurrenceTypeFromLabel = (label: string): RecurrenceType | null => {
+  return ReverseRecurrenceTypeMap[label] ?? null;
+};
+
+export const RecurrenceOptions = Object.entries(RecurrenceTypeMap).map(([key, title]) => ({
+  id: Number(key),
+  title,
+}));

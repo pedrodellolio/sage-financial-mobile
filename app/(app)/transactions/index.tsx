@@ -9,7 +9,7 @@ import { Transaction } from "@/models/transaction";
 import { getTransactionsByMonthAndYear } from "@/services/transactions";
 import { styles } from "@/styling";
 import { currentMonth, currentYear } from "@/utils/date";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react-native";
 import { useState } from "react";
@@ -18,6 +18,7 @@ import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 export default function TransactionsScreen() {
   const [selectedMonth, setSelectedMonth] = useState<number>(currentMonth - 1);
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
+  const queryClient = useQueryClient();
 
   const { data, isLoading, error } = useQuery<Transaction[]>({
     queryKey: ["transactions", selectedMonth, selectedYear],
@@ -26,6 +27,7 @@ export default function TransactionsScreen() {
   });
 
   const handlePreviousMonth = () => {
+    queryClient.invalidateQueries({ queryKey: ["summary"] });
     setSelectedMonth((prevMonth) => {
       if (prevMonth === 0) {
         setSelectedYear((prevYear) => prevYear - 1);
@@ -36,6 +38,7 @@ export default function TransactionsScreen() {
   };
 
   const handleNextMonth = () => {
+    queryClient.invalidateQueries({ queryKey: ["summary"] });
     setSelectedMonth((prevMonth) => {
       if (prevMonth === 11) {
         setSelectedYear((prevYear) => prevYear + 1);
@@ -108,6 +111,8 @@ export default function TransactionsScreen() {
                     valueBrl: transaction.valueBrl,
                     labelTitle: transaction.label?.title,
                     frequency: transaction.frequency,
+                    totalInstallments: transaction.totalInstallments,
+                    installment: transaction.installment,
                   },
                 })
               }

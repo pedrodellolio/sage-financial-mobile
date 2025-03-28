@@ -1,11 +1,13 @@
 import DropdownProfileInput from "@/components/dropdowns/dropdown-profile-input";
 import { Theme } from "@/constants/theme";
 import { useSession } from "@/hooks/use-session";
+import { signOut } from "@/services/auth";
 import { styles } from "@/styling";
 import { useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { ChevronRight, Cog, Tag, Users } from "lucide-react-native";
 import {
+  Button,
   ScrollView,
   StyleSheet,
   Text,
@@ -79,6 +81,8 @@ export default function DrawerScreen() {
           <ChevronRight color={Theme.colors.white} size={20} />
         </TouchableOpacity>
       </View>
+
+      <Button title="Sair" onPress={signOut} />
     </ScrollView>
   );
 }

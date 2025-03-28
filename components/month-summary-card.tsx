@@ -13,11 +13,12 @@ interface Props {
 }
 
 export default function MonthSummaryCard({ month, year }: Props) {
+  console.log(month);
   const { data, isLoading, error } = useQuery<Summary>({
     queryKey: ["summary", month, year],
     queryFn: () => getSummary(month, year),
   });
-
+  console.log(data);
   if (isLoading) return <Text>Carregando...</Text>;
   if (error) return <Text>Ocorreu um erro.</Text>;
   return (

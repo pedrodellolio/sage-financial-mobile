@@ -3,10 +3,7 @@ import { z } from "zod";
 
 export const addTransactionSchema = z.object({
   title: z.string().min(1, "Título é obrigatório"),
-  valueBrl: z
-    .string()
-    .min(1, "Valor é obrigatória")
-    .transform((val) => parseFloat(val)),
+  valueBrl: z.coerce.number().min(1, "Valor é obrigatória"),
   type: z.nativeEnum(TransactionType),
   label: z
     .object({
@@ -15,11 +12,9 @@ export const addTransactionSchema = z.object({
     })
     .optional(),
   occurredAt: z.coerce.date(),
-  totalInstallments: z
-    .string()
-    .transform((val) => parseInt(val))
-    .refine((num) => num <= 60, "Número de 60 parcelas permitidas"),
+  totalInstallments: z.coerce.number(),
   frequency: z.nativeEnum(RecurrenceType).optional(),
+  interestPercentage: z.coerce.number().transform((i) => i / 100),
 });
 
 export type AddTransactionFormData = z.infer<typeof addTransactionSchema>;

@@ -1,10 +1,6 @@
 import Header from "@/components/header";
 import { Theme } from "@/constants/theme";
-import {
-  formatRecurrenceType,
-  RecurrenceType,
-  TransactionType,
-} from "@/models/transaction";
+import { getRecurrenceTypeLabel } from "@/models/transaction";
 import { deleteTransaction } from "@/services/transactions";
 import { styles } from "@/styling";
 import { capitalize } from "@/utils/format";
@@ -21,6 +17,8 @@ type Params = {
   frequency: string;
   type: string;
   labelTitle: string;
+  totalInstallments: string;
+  installment: string;
 };
 
 export default function DetailsTransactionsModal() {
@@ -147,30 +145,7 @@ export default function DetailsTransactionsModal() {
             })}
           </Text>
         </View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            paddingTop: 40,
-          }}
-        >
-          <Text style={[styles.text, { color: Theme.colors.secondary }]}>
-            Categoria
-          </Text>
-          <View style={[styles.chipButton, { paddingHorizontal: 20 }]}>
-            <Text
-              style={[
-                styles.text,
-                { fontSize: Theme.typography.sm, fontWeight: 600 },
-              ]}
-            >
-              {capitalize(params.labelTitle)}
-            </Text>
-          </View>
-        </View>
-        {params.frequency && (
+        {params.labelTitle && (
           <View
             style={{
               display: "flex",
@@ -181,7 +156,7 @@ export default function DetailsTransactionsModal() {
             }}
           >
             <Text style={[styles.text, { color: Theme.colors.secondary }]}>
-              Recorrência
+              Categoria
             </Text>
             <View style={[styles.chipButton, { paddingHorizontal: 20 }]}>
               <Text
@@ -190,8 +165,59 @@ export default function DetailsTransactionsModal() {
                   { fontSize: Theme.typography.sm, fontWeight: 600 },
                 ]}
               >
-                {formatRecurrenceType(Number(params.frequency))}
+                {capitalize(params.labelTitle)}
               </Text>
+            </View>
+          </View>
+        )}
+        {params.frequency && (
+          <View>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                paddingTop: 40,
+              }}
+            >
+              <Text style={[styles.text, { color: Theme.colors.secondary }]}>
+                Recorrência
+              </Text>
+              <View style={[styles.chipButton, { paddingHorizontal: 20 }]}>
+                <Text
+                  style={[
+                    styles.text,
+                    { fontSize: Theme.typography.sm, fontWeight: 600 },
+                  ]}
+                >
+                  {getRecurrenceTypeLabel(Number(params.frequency))}
+                </Text>
+              </View>
+            </View>
+
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                paddingTop: 40,
+              }}
+            >
+              <Text style={[styles.text, { color: Theme.colors.secondary }]}>
+                Parcela
+              </Text>
+              <View style={[styles.chipButton, { paddingHorizontal: 20 }]}>
+                <Text
+                  style={[
+                    styles.text,
+                    { fontSize: Theme.typography.sm, fontWeight: 600 },
+                  ]}
+                >
+                  {params.installment} de {params.totalInstallments}
+                </Text>
+              </View>
             </View>
           </View>
         )}

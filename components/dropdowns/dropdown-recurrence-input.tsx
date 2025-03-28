@@ -1,10 +1,9 @@
 import { Theme } from "@/constants/theme";
 import { Label } from "@/models/label";
 import {
-  formatRecurrenceType,
+  getRecurrenceTypeLabel,
   RecurrenceOptions,
   RecurrenceType,
-  toRecurrenceType,
 } from "@/models/transaction";
 import { styles } from "@/styling";
 import { Clock } from "lucide-react-native";
@@ -50,12 +49,12 @@ const DropdownRecurrenceInput = ({
         searchPlaceholder="Buscar..."
         value={{
           id: value,
-          title: value,
+          title: getRecurrenceTypeLabel(value ?? 0),
         }}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
-        onChange={(item: { title: string; id: number }) => {
-          onChange(String(toRecurrenceType(item.title)));
+        onChange={(item) => {
+          onChange(item.id);
           setIsFocus(false);
         }}
         renderLeftIcon={() => (

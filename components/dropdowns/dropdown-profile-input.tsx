@@ -5,7 +5,7 @@ import { getProfiles } from "@/services/profile";
 import { styles } from "@/styling";
 import { capitalize } from "@/utils/format";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Tag, Users } from "lucide-react-native";
+import { Check } from "lucide-react-native";
 import React, { useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
@@ -27,9 +27,7 @@ const DropdownProfileInput = ({}: Props) => {
     <View>
       <Dropdown
         style={[
-          // styles.input,
-          // { paddingTop: 8, paddingBottom: 8 },
-          { width: 100},
+          { width: 100 },
           isFocus && { borderColor: Theme.colors.primary },
         ]}
         placeholderStyle={[styleSheet.placeholderStyle]}
@@ -38,8 +36,13 @@ const DropdownProfileInput = ({}: Props) => {
         itemTextStyle={styles.text}
         containerStyle={styleSheet.container}
         iconStyle={styleSheet.iconStyle}
-        data={data ?? []}
-        // search
+        itemContainerStyle={{ backgroundColor: Theme.colors.background }}
+        data={
+          data?.map((d) => {
+            return { ...d, title: capitalize(d.title) };
+          }) ?? []
+        }
+        search
         mode="modal"
         maxHeight={300}
         labelField="title"
@@ -47,7 +50,28 @@ const DropdownProfileInput = ({}: Props) => {
         placeholder={!isFocus ? "Selecione..." : "..."}
         searchPlaceholder="Buscar..."
         value={profile}
-        renderItem={(item) => <Text>{capitalize(item.title)}</Text>}
+        renderItem={(item) => {
+          const selected = profile?.id === item.id;
+          return (
+            <View
+              style={[
+                styleSheet.item,
+                { display: "flex", flexDirection: "row", gap: 10 },
+              ]}
+            >
+              {selected && (
+                <Check
+                  color={Theme.colors.primary}
+                  size={16}
+                  style={{ marginTop: 2 }}
+                />
+              )}
+              <Text style={[styles.text, selected && styleSheet.selectedItem]}>
+                {capitalize(item.title)}
+              </Text>
+            </View>
+          );
+        }}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
         onChange={(item) => {
@@ -55,9 +79,6 @@ const DropdownProfileInput = ({}: Props) => {
           queryClient.resetQueries();
           setIsFocus(false);
         }}
-        // renderLeftIcon={() => (
-        //   <Users color={Theme.colors.secondary} size={18} />
-        // )}
       />
     </View>
   );
@@ -68,6 +89,19 @@ export default DropdownProfileInput;
 const styleSheet = StyleSheet.create({
   container: {
     backgroundColor: Theme.colors.background,
+    bottom: 0,
+    position: "absolute",
+    width: "100%",
+    height: 300,
+    paddingInline: 20,
+    borderWidth: 0,
+    borderTopStartRadius: Theme.radius.xl,
+    borderTopEndRadius: Theme.radius.xl,
+  },
+  item: { backgroundColor: Theme.colors.background, padding: 8, marginTop: 20 },
+  selectedItem: {
+    fontWeight: 600,
+    color: Theme.colors.primary,
   },
   dropdown: {
     borderColor: Theme.colors.white,
@@ -85,7 +119,7 @@ const styleSheet = StyleSheet.create({
   },
   selectedTextStyle: {
     color: Theme.colors.white,
-    // paddingLeft: 18,
+    marginLeft: 6,
   },
   iconStyle: {
     width: 20,
