@@ -13,12 +13,10 @@ interface Props {
 }
 
 export default function MonthSummaryCard({ month, year }: Props) {
-  console.log(month);
   const { data, isLoading, error } = useQuery<Summary>({
     queryKey: ["summary", month, year],
     queryFn: () => getSummary(month, year),
   });
-  console.log(data);
   if (isLoading) return <Text>Carregando...</Text>;
   if (error) return <Text>Ocorreu um erro.</Text>;
   return (
@@ -28,7 +26,11 @@ export default function MonthSummaryCard({ month, year }: Props) {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        paddingInline: 28,
+        paddingInline: 44,
+        paddingVertical: 26,
+        borderWidth: 1,
+        borderColor: Theme.colors.bgSecondary,
+        borderRadius: Theme.radius.lg,
       }}
     >
       <View style={{ gap: 4 }}>

@@ -39,6 +39,9 @@ import { addDays, addMonths } from "date-fns";
 import Loading from "@/components/loading";
 import DropdownLabelInput from "@/components/dropdowns/dropdown-label-input";
 import DropdownRecurrenceInput from "@/components/dropdowns/dropdown-recurrence-input";
+import TypeGroupButton from "@/components/type-group-button";
+import useNotificationScheduler from "@/hooks/use-notifications";
+import { SchedulableTriggerInputTypes } from "expo-notifications";
 
 type Params = {
   id: string;
@@ -168,10 +171,7 @@ export default function AddTransactionsModal() {
           </TouchableOpacity>
         }
       />
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        // style={{ marginBottom: 100 }}
-      >
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{
             display: "flex",
@@ -183,72 +183,7 @@ export default function AddTransactionsModal() {
             control={control}
             name="type"
             render={({ field: { onChange, value } }) => (
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  gap: 10,
-                  backgroundColor: Theme.colors.bgSecondary,
-                  padding: 8,
-                  borderRadius: Theme.radius.xl,
-                }}
-              >
-                <Pressable
-                  onPress={() => onChange(TransactionType.EXPENSE)}
-                  style={[
-                    {
-                      backgroundColor:
-                        value == TransactionType.EXPENSE
-                          ? Theme.colors.primary
-                          : Theme.colors.bgSecondary,
-                      padding: 10,
-                      flex: 1,
-                      borderRadius: Theme.radius.lg,
-                    },
-                  ]}
-                >
-                  <Text
-                    style={[
-                      styles.text,
-                      {
-                        textAlign: "center",
-                        fontWeight:
-                          value == TransactionType.EXPENSE ? 800 : 400,
-                      },
-                    ]}
-                  >
-                    Despesa
-                  </Text>
-                </Pressable>
-                <Pressable
-                  onPress={() => onChange(TransactionType.INCOME)}
-                  style={[
-                    {
-                      backgroundColor:
-                        value == TransactionType.INCOME
-                          ? Theme.colors.primary
-                          : Theme.colors.bgSecondary,
-                      padding: 10,
-                      flex: 1,
-                      borderRadius: Theme.radius.lg,
-                    },
-                  ]}
-                >
-                  <Text
-                    style={[
-                      styles.text,
-                      {
-                        textAlign: "center",
-                        fontWeight: value == TransactionType.INCOME ? 800 : 400,
-                      },
-                    ]}
-                  >
-                    Receita
-                  </Text>
-                </Pressable>
-              </View>
+              <TypeGroupButton onChange={onChange} value={value} />
             )}
           />
 

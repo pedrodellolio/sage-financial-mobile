@@ -88,7 +88,7 @@ export default DropdownProfileInput;
 
 const styleSheet = StyleSheet.create({
   container: {
-    backgroundColor: Theme.colors.background,
+    backgroundColor: Theme.colors.bgSecondary,
     bottom: 0,
     position: "absolute",
     width: "100%",
@@ -97,8 +97,12 @@ const styleSheet = StyleSheet.create({
     borderWidth: 0,
     borderTopStartRadius: Theme.radius.xl,
     borderTopEndRadius: Theme.radius.xl,
+    paddingTop: 20
   },
-  item: { backgroundColor: Theme.colors.background, padding: 8, marginTop: 20 },
+  item: {
+    backgroundColor: Theme.colors.bgSecondary,
+    padding: 14,
+  },
   selectedItem: {
     fontWeight: 600,
     color: Theme.colors.primary,
@@ -129,5 +133,6 @@ const styleSheet = StyleSheet.create({
     height: 40,
     borderRadius: Theme.radius.lg,
     borderColor: Theme.colors.border,
+    color: Theme.colors.white
   },
 });

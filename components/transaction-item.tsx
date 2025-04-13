@@ -16,6 +16,7 @@ export default function TransactionsItem({ data }: Props) {
           display: "flex",
           flexDirection: "column",
           gap: 4,
+          paddingVertical: 4
         }}
       >
         <Text style={[styles.text, { fontSize: Theme.typography.sm }]}>
@@ -28,10 +29,7 @@ export default function TransactionsItem({ data }: Props) {
             { color: Theme.colors.secondary, fontSize: Theme.typography.sm },
           ]}
         >
-          {new Date(data.occurredAt).toLocaleDateString("pt-BR", {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
+          {new Date(data.occurredAt).toLocaleDateString("pt-BR")}
         </Text>
       </View>
       <Text

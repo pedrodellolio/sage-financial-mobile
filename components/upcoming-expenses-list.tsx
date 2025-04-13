@@ -19,31 +19,15 @@ export default function UpcomingExpensesList({}: Props) {
 
   // if (isLoading) return <Text>Carregando...</Text>;
   // if (error) return <Text>Ocorreu um erro.</Text>;
-
-  const data: Transaction[] = [
-    {
-      id: "1",
-      title: "INTERNET",
-      valueBrl: 100,
-      type: TransactionType.EXPENSE,
-      occurredAt: today.toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      label: {} as Label,
-    },
-  ];
-
   return (
     <View style={{ gap: 10 }}>
-      {data ? (
+      {/* {data ? (
         data.map((d) => {
           return <UpcomingExpenseItem key={d.id} data={d} />;
         })
       ) : (
         <Text>Sem resultados</Text>
-      )}
+      )} */}
     </View>
   );
 }

@@ -139,10 +139,7 @@ export default function DetailsTransactionsModal() {
             Data
           </Text>
           <Text style={[styles.text]}>
-            {new Date(params.occurredAt).toLocaleDateString("pt-BR", {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
+            {new Date(params.occurredAt).toLocaleDateString("pt-BR")}
           </Text>
         </View>
         {params.labelTitle && (

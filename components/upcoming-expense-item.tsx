@@ -28,10 +28,7 @@ export default function UpcomingExpenseItem({ data }: Props) {
             { color: Theme.colors.secondary, fontSize: Theme.typography.sm },
           ]}
         >
-          {new Date(data.occurredAt).toLocaleDateString("pt-BR", {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
+          {new Date(data.occurredAt).toLocaleDateString("pt-BR")}
         </Text>
       </View>
       <Text

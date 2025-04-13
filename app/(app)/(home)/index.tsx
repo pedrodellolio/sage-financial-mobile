@@ -189,7 +189,7 @@ export default function DashboardScreen() {
             </Text>
             <SeeMoreButton />
           </View>
-          <UpcomingExpensesList />
+          {/* <UpcomingExpensesList /> */}
         </View>
 
         <View style={{ marginTop: 40 }}>

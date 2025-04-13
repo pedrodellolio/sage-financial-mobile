@@ -8,7 +8,7 @@ import { styles } from "@/styling";
 import { currentMonth, currentYear } from "@/utils/date";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
-import { ChevronLeft, ChevronRight, Plus } from "lucide-react-native";
+import { Bell, ChevronLeft, ChevronRight, Goal, Plus } from "lucide-react-native";
 import { useState } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
@@ -84,7 +84,7 @@ export default function GoalsScreen() {
         showsVerticalScrollIndicator={false}
         style={{ paddingBlock: 12 }}
       >
-        {data ? (
+        {data && data.length > 0 ? (
           data.map((goal) => (
             <TouchableOpacity
               key={goal.id}
@@ -112,9 +112,40 @@ export default function GoalsScreen() {
             </TouchableOpacity>
           ))
         ) : (
-          <Text style={[styles.text, { textAlign: "center", marginTop: 28 }]}>
-            Sem resultados
-          </Text>
+          <View
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 20,
+              marginTop: 100,
+            }}
+          >
+            <Goal color={Theme.colors.bgSecondary} size={120} />
+            <Text
+              style={[
+                styles.text,
+                {
+                  textAlign: "center",
+                  marginTop: 20,
+                  color: Theme.colors.secondary,
+                },
+              ]}
+            >
+              Não existem metas cadastradas
+            </Text>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() =>
+                router.push({
+                  pathname: "/(modals)/add-transaction-modal",
+                })
+              }
+            >
+              <Text style={[styles.text, { fontWeight: 600 }]}>
+                Criar nova meta
+              </Text>
+            </TouchableOpacity>
+          </View>
         )}
       </ScrollView>
     </View>

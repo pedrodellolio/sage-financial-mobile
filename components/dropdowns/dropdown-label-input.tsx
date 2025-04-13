@@ -11,9 +11,10 @@ import { Dropdown } from "react-native-element-dropdown";
 interface Props {
   value?: Label;
   onChange: (value: Label) => void;
-  month: number;
-  year: number;
+  month?: number;
+  year?: number;
   fromBudgetGoal?: boolean;
+  placeholder?: string;
   style?: StyleProp<ViewStyle>;
 }
 
@@ -23,6 +24,7 @@ const DropdownLabelInput = ({
   month,
   year,
   fromBudgetGoal,
+  placeholder,
   style,
 }: Props) => {
   const [isFocus, setIsFocus] = useState(false);
@@ -31,10 +33,11 @@ const DropdownLabelInput = ({
     queryFn: () => getLabels(fromBudgetGoal ?? false, month, year),
   });
 
+  const placeholderText = placeholder ?? "Selecione uma categoria...";
   if (isLoading) return <Text>Loading...</Text>;
   if (error) return <Text>Error loading labels</Text>;
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Dropdown
         style={[
           styles.input,
@@ -53,7 +56,7 @@ const DropdownLabelInput = ({
         maxHeight={300}
         labelField="title"
         valueField="id"
-        placeholder={!isFocus ? "Selecione uma categoria" : "..."}
+        placeholder={!isFocus ? placeholderText : "..."}
         searchPlaceholder="Buscar..."
         value={value}
         onFocus={() => setIsFocus(true)}

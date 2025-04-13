@@ -41,7 +41,7 @@ export const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 16,
     color: Theme.colors.white,
-    minWidth: 120
+    minWidth: 120,
   },
   errorInput: {
     borderColor: "red",
@@ -92,5 +92,27 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 20,
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Dark overlay background
+  },
+  bottomSheet: {
+    width: "100%",
+    backgroundColor: Theme.colors.white,
+    padding: 20,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    borderWidth: 1,
+    borderColor: Theme.colors.bgSecondary,
+  },
+  closeButton: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: Theme.colors.primary,
+    borderRadius: 5,
+    alignItems: "center",
   },
 });

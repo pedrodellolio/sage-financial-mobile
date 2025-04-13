@@ -6,6 +6,7 @@ import {
 } from "@/models/transaction";
 import api from "./axios-config";
 import { AddTransactionFormData } from "@/schemas/add-transaction-schema";
+import { FilterTransactionFormData } from "@/schemas/filter-transaction-schema";
 
 export interface AddTransactionDto {
   title: string;
@@ -26,13 +27,24 @@ export async function getTransactionById(transactionId: string) {
 
 export async function getTransactionsByMonthAndYear(
   month: number,
-  year: number
+  year: number,
+  input?: string,
+  filters?: FilterTransactionFormData
 ): Promise<Transaction[]> {
   try {
     const response = await api.get<Transaction[]>(
       `transaction/get-by-month-year`,
       {
-        params: { month, year },
+        params: {
+          month,
+          year,
+          input,
+          onlyRecurrent: filters?.isRecurrent,
+          onlyInstallment: filters?.isInstallment,
+          minValue: filters?.minValue,
+          maxValue: filters?.maxValue,
+          type: filters?.type,
+        },
       }
     );
     return response.data;
