@@ -227,11 +227,14 @@ export default function AddBudgetGoalModal() {
           render={({ field: { onChange, value } }) => (
             <View>
               <DropdownLabelInput
+                style={{ height: 50 }}
                 onChange={onChange}
                 value={value}
                 month={Number(params.month)}
                 year={Number(params.year)}
-                fromBudgetGoal={params.id ? false : Boolean(params.fromBudgetGoal)}
+                fromBudgetGoal={
+                  params.id ? false : Boolean(params.fromBudgetGoal)
+                }
               />
               <Text
                 style={[
@@ -239,7 +242,7 @@ export default function AddBudgetGoalModal() {
                   {
                     color: Theme.colors.secondary,
                     fontSize: Theme.typography.sm,
-                    marginTop: 10,
+                    marginTop: 60,
                   },
                 ]}
               >

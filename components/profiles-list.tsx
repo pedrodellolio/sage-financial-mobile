@@ -6,13 +6,16 @@ import { useQuery } from "@tanstack/react-query";
 import { currentMonth, currentYear } from "@/utils/date";
 import { getProfilesBalance } from "@/services/profile";
 import { ProfileBalance } from "@/models/profileBalance";
+import { useSession } from "@/hooks/use-session";
 
 type Props = {};
 
 export default function ProfilesList({}: Props) {
+  const {user} = useSession();
+
   const { data, isLoading, error } = useQuery<ProfileBalance[]>({
-    queryKey: ["profiles", currentMonth, currentYear],
-    queryFn: () => getProfilesBalance(currentMonth, currentYear),
+    queryKey: ["profiles", currentMonth, currentYear, user?.id],
+    queryFn: () => getProfilesBalance(currentMonth, currentYear, user?.id),
   });
 
   if (isLoading) return <Text>Loading...</Text>;

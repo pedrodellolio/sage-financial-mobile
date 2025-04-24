@@ -8,6 +8,7 @@ import SeeMoreButton from "@/components/see-more-button";
 import UpcomingExpensesList from "@/components/upcoming-expenses-list";
 import { MONTHS } from "@/constants/months";
 import { Theme } from "@/constants/theme";
+import { useSession } from "@/hooks/use-session";
 import { Profile } from "@/models/profile";
 import { Summary } from "@/models/summary";
 import { getSummary } from "@/services/wallet";
@@ -20,13 +21,14 @@ import { router } from "expo-router";
 import { ChevronRight, Plus } from "lucide-react-native";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
-const currentProfile = async () => {
-  const profileJson = await AsyncStorage.getItem("profile");
+const currentProfile = async (userId?: string) => {
+  const profileJson = await AsyncStorage.getItem(`profile:${userId}`);
   const profile = profileJson && JSON.parse(profileJson);
   return profile as Profile;
 };
 
 export default function DashboardScreen() {
+  const { user } = useSession();
   const { data, isLoading, error } = useQuery<Summary>({
     queryKey: ["summary", currentMonth, currentYear],
     queryFn: () => getSummary(currentMonth, currentYear),
@@ -38,7 +40,7 @@ export default function DashboardScreen() {
     error: profileError,
   } = useQuery<Profile>({
     queryKey: ["profile"],
-    queryFn: () => currentProfile(),
+    queryFn: () => currentProfile(user?.id),
   });
 
   if (isLoading) return <Loading />;

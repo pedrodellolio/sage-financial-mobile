@@ -10,6 +10,7 @@ interface AuthContextProps {
   profile: Profile | null;
   loading: boolean;
   changeProfile: (profile: Profile) => Promise<void>;
+  changeToDefaultProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
@@ -47,8 +48,9 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     };
 
     const getProfile = async () => {
-      let profileJson = await AsyncStorage.getItem("profile");
+      let profileJson = await AsyncStorage.getItem(`profile:${user?.id}`);
       if (!profileJson) profileJson = JSON.stringify(await getDefaultProfile());
+      console.log(profileJson);
       await changeProfile(JSON.parse(profileJson));
     };
 
@@ -64,9 +66,24 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const changeProfile = async (profile: Profile) => {
-    await AsyncStorage.setItem("profile", JSON.stringify(profile));
+    if (!user?.id) return;
+    await AsyncStorage.setItem(`profile:${user?.id}`, JSON.stringify(profile));
     setProfile(profile);
-    // console.log(profile);
+  };
+
+  const changeToDefaultProfile = async () => {
+    console.log("changing to default...");
+    let profileJson = await AsyncStorage.getItem(`profile:${user?.id}`);
+    if (!profileJson) {
+      try {
+        const response = await api.get<Profile>("profile/default");
+        profileJson = JSON.stringify(response.data);
+      } catch (error) {
+        throw new Error("Failed to fetch profileId from API");
+      }
+    }
+    console.log(profileJson);
+    await changeProfile(JSON.parse(profileJson));
   };
 
   return (
@@ -76,6 +93,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
         profile,
         loading,
         changeProfile,
+        changeToDefaultProfile,
       }}
     >
       {children}

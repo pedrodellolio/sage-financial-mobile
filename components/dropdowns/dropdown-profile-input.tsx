@@ -6,7 +6,7 @@ import { styles } from "@/styling";
 import { capitalize } from "@/utils/format";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Check } from "lucide-react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
@@ -14,12 +14,16 @@ interface Props {}
 
 const DropdownProfileInput = ({}: Props) => {
   const queryClient = useQueryClient();
-  const { profile, changeProfile } = useSession();
+  const { profile, changeToDefaultProfile, changeProfile } = useSession();
   const [isFocus, setIsFocus] = useState(false);
   const { data, isLoading, error } = useQuery<Profile[]>({
     queryKey: ["profiles"],
     queryFn: () => getProfiles(),
   });
+
+  useEffect(() => {
+    if (!profile) changeToDefaultProfile();
+  }, [profile]);
 
   if (isLoading) return <Text>Loading...</Text>;
   if (error) return <Text>Error loading profiles</Text>;
@@ -97,7 +101,7 @@ const styleSheet = StyleSheet.create({
     borderWidth: 0,
     borderTopStartRadius: Theme.radius.xl,
     borderTopEndRadius: Theme.radius.xl,
-    paddingTop: 20
+    paddingTop: 20,
   },
   item: {
     backgroundColor: Theme.colors.bgSecondary,
@@ -133,6 +137,6 @@ const styleSheet = StyleSheet.create({
     height: 40,
     borderRadius: Theme.radius.lg,
     borderColor: Theme.colors.border,
-    color: Theme.colors.white
+    color: Theme.colors.white,
   },
 });

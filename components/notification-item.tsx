@@ -3,9 +3,9 @@ import { styles } from "@/styling";
 import { Text, TouchableOpacity, View } from "react-native";
 import { capitalize } from "@/utils/format";
 import { Notification } from "@/models/notification";
-import { Bell, Plus } from "lucide-react-native";
+import { Bell, BellOff } from "lucide-react-native";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteNotification } from "@/services/notifications";
+import { toggleNotification } from "@/services/notifications";
 
 interface Props {
   data: Notification;
@@ -15,13 +15,13 @@ export default function NotificationItem({ data }: Props) {
   const queryClient = useQueryClient();
 
   const { mutateAsync } = useMutation({
-    mutationFn: (id: string) => deleteNotification(id),
+    mutationFn: (id: string) => toggleNotification(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notification"] });
     },
   });
 
-  const handleDelete = (id: string) => {
+  const handleToggleNotification = (id: string) => {
     mutateAsync(id);
   };
 
@@ -71,18 +71,20 @@ export default function NotificationItem({ data }: Props) {
           </Text>
         </View>
         <TouchableOpacity
-          onPress={() => handleDelete(data.transaction.id)}
+          onPress={() => handleToggleNotification(data.transaction.id)}
           style={{
-            backgroundColor: Theme.colors.background,
+            backgroundColor: data.isEnabled
+              ? Theme.colors.background
+              : Theme.colors.background,
             borderRadius: Theme.radius.lg,
             padding: 10,
           }}
         >
-          <Bell
-            fill={Theme.colors.primary}
-            color={Theme.colors.primary}
-            size={18}
-          />
+          {data.isEnabled ? (
+            <Bell fill={Theme.colors.primary} size={18} />
+          ) : (
+            <BellOff fill={Theme.colors.secondary} color={Theme.colors.secondary} size={18} />
+          )}
         </TouchableOpacity>
       </View>
     </View>

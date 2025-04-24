@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { Notification } from "@/models/notification";
 import NotificationItem from "@/components/notification-item";
-import { Bell, Plus } from "lucide-react-native";
+import { Bell } from "lucide-react-native";
 import { Theme } from "@/constants/theme";
 import { router } from "expo-router";
 

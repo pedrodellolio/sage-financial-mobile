@@ -18,13 +18,13 @@ export async function getProfiles(): Promise<Profile[]> {
   }
 }
 
-export async function getProfilesBalance(month: number, year: number) {
+export async function getProfilesBalance(month: number, year: number, userId?: string) {
   try {
     const response = await api.get<ProfileBalance[]>(
       `profile/all-profile-balance`,
       { params: { month, year } }
     );
-    const profileJson = await AsyncStorage.getItem("profile");
+    const profileJson = await AsyncStorage.getItem(`profile:${userId}`);
     const profile = profileJson && JSON.parse(profileJson);
     return response.data.filter(i => i.profile.id !== profile.id);
   } catch (error) {

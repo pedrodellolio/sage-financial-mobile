@@ -35,6 +35,7 @@ const usePushNotifications = () => {
     registerForPushNotificationsAsync();
 
     if (Platform.OS === "android") {
+      console.log("channel");
       Notifications.setNotificationChannelAsync("default", {
         name: "default",
         importance: Notifications.AndroidImportance.MAX,

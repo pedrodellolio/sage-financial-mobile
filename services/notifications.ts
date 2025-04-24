@@ -20,11 +20,11 @@ export async function getNotifications(): Promise<Notification[]> {
   }
 }
 
-export async function deleteNotification(transactionId: string) {
+export async function toggleNotification(transactionId: string) {
   try {
-    return await api.delete<Notification>(`notifications/${transactionId}`);
+    return await api.put<Notification>(`notifications/toggle/${transactionId}`);
   } catch (error) {
-    console.error("Error deleting notification:", error);
+    console.error("Error disabling notification:", error);
     throw error;
   }
 }
