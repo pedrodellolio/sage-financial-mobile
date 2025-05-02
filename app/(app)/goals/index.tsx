@@ -1,5 +1,5 @@
-import BudgetGoalItem from "@/components/budget-goal-item";
 import Header from "@/components/header";
+import BudgetGoalItem from "@/components/lists/items/budget-goal-item";
 import { MONTHS } from "@/constants/months";
 import { Theme } from "@/constants/theme";
 import { BudgetGoal } from "@/models/budgetGoal";
@@ -8,9 +8,21 @@ import { styles } from "@/styling";
 import { currentMonth, currentYear } from "@/utils/date";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
-import { Bell, ChevronLeft, ChevronRight, Goal, Plus } from "lucide-react-native";
+import {
+  Bell,
+  ChevronLeft,
+  ChevronRight,
+  Goal,
+  Plus,
+} from "lucide-react-native";
 import { useState } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function GoalsScreen() {
   const [selectedMonth, setSelectedMonth] = useState<number>(currentMonth - 1);
@@ -80,23 +92,25 @@ export default function GoalsScreen() {
         }
       />
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={{ paddingBlock: 12 }}
-      >
-        {data && data.length > 0 ? (
-          data.map((goal) => (
+      {data && data.length > 0 ? (
+        <FlatList
+          style={{
+            width: "100%",
+          }}
+          showsHorizontalScrollIndicator={false}
+          data={data}
+          renderItem={(value) => (
             <TouchableOpacity
-              key={goal.id}
+              key={value.item.id}
               style={{ marginBottom: 12 }}
               onPress={() =>
                 router.push({
                   pathname: "/(modals)/add-budget-goal-modal",
                   params: {
-                    id: goal.id,
-                    value: goal.value,
-                    type: goal.type,
-                    labelId: goal.label.id,
+                    id: value.item.id,
+                    value: value.item.value,
+                    type: value.item.type,
+                    labelId: value.item.label.id,
                     month: selectedMonth + 1,
                     year: selectedYear,
                     fromBudgetGoal: 1,
@@ -105,49 +119,54 @@ export default function GoalsScreen() {
               }
             >
               <BudgetGoalItem
-                data={goal}
+                data={value.item}
                 month={selectedMonth + 1}
                 year={selectedYear}
               />
             </TouchableOpacity>
-          ))
-        ) : (
-          <View
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 20,
-              marginTop: 100,
-            }}
+          )}
+        />
+      ) : (
+        <View
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 20,
+            marginTop: 100,
+          }}
+        >
+          <Goal color={Theme.colors.bgSecondary} size={120} />
+          <Text
+            style={[
+              styles.text,
+              {
+                textAlign: "center",
+                marginTop: 20,
+                color: Theme.colors.secondary,
+              },
+            ]}
           >
-            <Goal color={Theme.colors.bgSecondary} size={120} />
-            <Text
-              style={[
-                styles.text,
-                {
-                  textAlign: "center",
-                  marginTop: 20,
-                  color: Theme.colors.secondary,
+            Não existem metas cadastradas
+          </Text>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() =>
+              router.push({
+                pathname: "/(modals)/add-budget-goal-modal",
+                params: {
+                  month: selectedMonth + 1,
+                  year: selectedYear,
+                  // fromBudgetGoal: 1,
                 },
-              ]}
-            >
-              Não existem metas cadastradas
+              })
+            }
+          >
+            <Text style={[styles.text, { fontWeight: 600 }]}>
+              Criar nova meta
             </Text>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() =>
-                router.push({
-                  pathname: "/(modals)/add-transaction-modal",
-                })
-              }
-            >
-              <Text style={[styles.text, { fontWeight: 600 }]}>
-                Criar nova meta
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      </ScrollView>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 }

@@ -1,13 +1,6 @@
 import { Theme } from "@/constants/theme";
-import { BudgetGoal, BudgetGoalType } from "@/models/budgetGoal";
-import { Transaction, TransactionType } from "@/models/transaction";
-import { Wallet } from "@/models/wallet";
-import { getTotalExpensesByLabel } from "@/services/transactions";
-import { getWalletByMonthAndYear } from "@/services/wallet";
 import { styles } from "@/styling";
-import { useQuery } from "@tanstack/react-query";
-import { DimensionValue, Text, View } from "react-native";
-import ProgressBar from "./progress-bar";
+import { Text, View } from "react-native";
 import { Label } from "@/models/label";
 import { capitalize } from "@/utils/format";
 
@@ -32,10 +25,19 @@ export default function LabelItem({ data }: Props) {
         style={{
           display: "flex",
           flexDirection: "row",
-          justifyContent: "space-between",
+          justifyContent: "flex-start",
           alignItems: "center",
+          gap: 16,
         }}
       >
+        <View
+          style={{
+            backgroundColor: data.colorHex,
+            width: 20,
+            height: 20,
+            borderRadius: Theme.radius.lg,
+          }}
+        ></View>
         <Text style={[styles.text, { fontSize: Theme.typography.sm }]}>
           {capitalize(data.title)}
         </Text>

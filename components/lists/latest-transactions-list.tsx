@@ -3,8 +3,11 @@ import { getTransactionsByPeriod } from "@/services/transactions";
 import { getLastWeekDaysPeriod } from "@/utils/date";
 import { Transaction } from "@/models/transaction";
 import { useQuery } from "@tanstack/react-query";
-import TransactionsItem from "./transaction-item";
-import { Text, View } from "react-native";
+import TransactionsItem from "./items/transaction-item";
+import { FlatList, Text, View } from "react-native";
+import { styles } from "@/styling";
+import { Theme } from "@/constants/theme";
+import NoResultsText from "../no-results-text";
 
 type Props = {};
 
@@ -17,15 +20,21 @@ export default function LatestTransactionsList({}: Props) {
 
   if (isLoading) return <Text>Carregando...</Text>;
   if (error) return <Text>Ocorreu um erro.</Text>;
-  return (
-    <View style={{ gap: 10 }}>
-      {data ? (
-        data.map((d) => {
-          return <TransactionsItem key={d.id} data={d} />;
-        })
-      ) : (
-        <Text>Sem resultados</Text>
-      )}
-    </View>
-  );
+
+  if (data && data.length > 0)
+    return (
+      <FlatList
+        style={{
+          width: "100%",
+        }}
+        scrollEnabled={false}
+        showsHorizontalScrollIndicator={false}
+        data={data}
+        renderItem={(value) => (
+          <TransactionsItem key={value.item.id} data={value.item} />
+        )}
+      />
+    );
+
+  return <NoResultsText />;
 }

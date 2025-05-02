@@ -2,8 +2,8 @@ import { TransactionType } from "@/models/transaction";
 import { z } from "zod";
 
 export const filterTransactionSchema = z.object({
-  minValue: z.coerce.number().optional(),
-  maxValue: z.coerce.number().optional(),
+  minValue: z.string(),
+  maxValue: z.string(),
   isRecurrent: z.boolean(),
   isInstallment: z.boolean(),
   // label: z

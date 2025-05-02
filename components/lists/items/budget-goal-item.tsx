@@ -1,14 +1,13 @@
 import { Theme } from "@/constants/theme";
 import { BudgetGoal, BudgetGoalType } from "@/models/budgetGoal";
-import { Transaction, TransactionType } from "@/models/transaction";
 import { Wallet } from "@/models/wallet";
 import { getTotalExpensesByLabel } from "@/services/transactions";
 import { getWalletByMonthAndYear } from "@/services/wallet";
 import { styles } from "@/styling";
 import { useQuery } from "@tanstack/react-query";
-import { DimensionValue, Text, View } from "react-native";
-import ProgressBar from "./progress-bar";
+import { Text, View } from "react-native";
 import { capitalize } from "@/utils/format";
+import ProgressBar from "@/components/progress-bar";
 
 interface Props {
   data: BudgetGoal;

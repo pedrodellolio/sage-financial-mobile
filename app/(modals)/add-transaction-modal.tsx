@@ -1,7 +1,6 @@
 import Header from "@/components/header";
 import { Theme } from "@/constants/theme";
 import {
-  getRecurrenceTypeLabel,
   RecurrenceOptions,
   RecurrenceType,
   Transaction,
@@ -40,8 +39,7 @@ import Loading from "@/components/loading";
 import DropdownLabelInput from "@/components/dropdowns/dropdown-label-input";
 import DropdownRecurrenceInput from "@/components/dropdowns/dropdown-recurrence-input";
 import TypeGroupButton from "@/components/type-group-button";
-import useNotificationScheduler from "@/hooks/use-notifications";
-import { SchedulableTriggerInputTypes } from "expo-notifications";
+import { MaskedInput } from "@/components/masked-input";
 
 type Params = {
   id: string;
@@ -64,7 +62,7 @@ export default function AddTransactionsModal() {
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     setValue,
     watch,
   } = useForm<AddTransactionFormData>({
@@ -73,6 +71,7 @@ export default function AddTransactionsModal() {
       type: TransactionType.EXPENSE,
       occurredAt: today,
       interestPercentage: 0,
+      valueBrl: "",
     },
   });
 
@@ -103,7 +102,7 @@ export default function AddTransactionsModal() {
     if (data) {
       setValue("title", data.title);
       setValue("occurredAt", new Date(data.occurredAt));
-      setValue("valueBrl", data.valueBrl);
+      setValue("valueBrl", data.valueBrl.toString());
       setValue("type", data.type);
       setValue("label", data.label ?? undefined);
       if (data.frequency) {
@@ -296,14 +295,11 @@ export default function AddTransactionsModal() {
                   gap: 4,
                 }}
               >
-                {/* <Text className="text-gray-300">Senha</Text> */}
-                <TextInput
-                  style={[styles.input, errors.valueBrl && styles.errorInput]}
-                  placeholder="R$0,00"
+                <MaskedInput
+                  style={errors.valueBrl && styles.errorInput}
                   onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value ? String(value) : ""}
-                  placeholderTextColor={Theme.colors.secondary}
+                  onChange={onChange}
+                  value={value}
                 />
               </View>
             )}

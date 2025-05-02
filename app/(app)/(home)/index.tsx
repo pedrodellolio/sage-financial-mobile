@@ -1,12 +1,10 @@
 import DropdownProfileInput from "@/components/dropdowns/dropdown-profile-input";
 import Header from "@/components/header";
-import LatestTransactionsList from "@/components/latest-transactions-list";
+import LatestTransactionsList from "@/components/lists/latest-transactions-list";
 import Loading from "@/components/loading";
-import ProfilesList from "@/components/profiles-list";
-import RecalculateWalletButton from "@/components/recalculate-wallet-button";
+import ProfilesList from "@/components/lists/profiles-list";
 import SeeMoreButton from "@/components/see-more-button";
-import UpcomingExpensesList from "@/components/upcoming-expenses-list";
-import { MONTHS } from "@/constants/months";
+import UpcomingExpensesList from "@/components/lists/upcoming-expenses-list";
 import { Theme } from "@/constants/theme";
 import { useSession } from "@/hooks/use-session";
 import { Profile } from "@/models/profile";
@@ -14,7 +12,6 @@ import { Summary } from "@/models/summary";
 import { getSummary } from "@/services/wallet";
 import { styles } from "@/styling";
 import { currentMonth, currentYear } from "@/utils/date";
-import { capitalize } from "@/utils/format";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
@@ -174,7 +171,7 @@ export default function DashboardScreen() {
             <Text style={[styles.text, { fontWeight: 600 }]}>
               Resumo por Perfil
             </Text>
-            <SeeMoreButton />
+            {/* <SeeMoreButton /> */}
           </View>
           <ProfilesList />
         </View>
@@ -189,9 +186,9 @@ export default function DashboardScreen() {
             <Text style={[styles.text, { fontWeight: 600 }]}>
               Próximos Pagamentos
             </Text>
-            <SeeMoreButton />
+            <SeeMoreButton onPress={() => router.push("/(app)/goals")} />
           </View>
-          {/* <UpcomingExpensesList /> */}
+          <UpcomingExpensesList />
         </View>
 
         <View style={{ marginTop: 40 }}>
@@ -204,7 +201,7 @@ export default function DashboardScreen() {
             <Text style={[styles.text, { fontWeight: 600 }]}>
               Últimas Movimentações
             </Text>
-            <SeeMoreButton />
+            <SeeMoreButton onPress={() => router.push("/(app)/transactions")} />
           </View>
           <LatestTransactionsList />
         </View>

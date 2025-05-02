@@ -1,12 +1,10 @@
 import { BarChart } from "react-native-gifted-charts";
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { currentMonth, currentYear } from "@/utils/date";
-import { formatBalanceChart, formatSummaryChart } from "@/utils/chart";
+import { formatBalanceChart } from "@/utils/chart";
 import { Text, View } from "react-native";
 import { Theme } from "@/constants/theme";
-import { Summary } from "@/models/summary";
-import { getSummary, getWalletsByPeriod } from "@/services/wallet";
+import { getWalletsByPeriod } from "@/services/wallet";
 import { Wallet } from "@/models/wallet";
 import { endOfYear, startOfYear } from "date-fns";
 

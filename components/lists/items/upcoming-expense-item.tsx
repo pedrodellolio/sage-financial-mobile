@@ -8,15 +8,14 @@ interface Props {
   data: Transaction;
 }
 
-export default function TransactionsItem({ data }: Props) {
+export default function UpcomingExpenseItem({ data }: Props) {
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, { marginBottom: 10 }]}>
       <View
         style={{
           display: "flex",
           flexDirection: "column",
           gap: 4,
-          paddingVertical: 4
         }}
       >
         <Text style={[styles.text, { fontSize: Theme.typography.sm }]}>

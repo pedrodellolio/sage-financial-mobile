@@ -62,7 +62,7 @@ const DropdownLabelInput = ({
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
         onChange={(item) => {
-          onChange({ id: item.id, title: item.title });
+          onChange({ id: item.id, title: item.title, colorHex: item.colorHex });
           setIsFocus(false);
         }}
         renderLeftIcon={() => <Tag color={Theme.colors.secondary} size={18} />}

@@ -74,11 +74,12 @@ export async function getTransactionsByPeriod(
   start: Date,
   end: Date,
   type?: TransactionType,
-  limit?: number
+  limit?: number,
+  onlyRecurrentOrInstallment: boolean = false
 ): Promise<Transaction[]> {
   try {
     const response = await api.get<Transaction[]>(`transaction/get-by-period`, {
-      params: { start, end, type, limit },
+      params: { start, end, type, limit, onlyRecurrentOrInstallment },
     });
     return response.data.map((t) => {
       return { ...t, occurredAt: t.occurredAt };
@@ -90,6 +91,7 @@ export async function getTransactionsByPeriod(
 }
 
 export async function postTransaction(transaction: AddTransactionFormData) {
+  console.log(transaction);
   try {
     return await api.post<boolean>(`transaction`, {
       ...transaction,

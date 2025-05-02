@@ -193,29 +193,31 @@ export default function DetailsTransactionsModal() {
               </View>
             </View>
 
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                paddingTop: 40,
-              }}
-            >
-              <Text style={[styles.text, { color: Theme.colors.secondary }]}>
-                Parcela
-              </Text>
-              <View style={[styles.chipButton, { paddingHorizontal: 20 }]}>
-                <Text
-                  style={[
-                    styles.text,
-                    { fontSize: Theme.typography.sm, fontWeight: 600 },
-                  ]}
-                >
-                  {params.installment} de {params.totalInstallments}
+            {Number(params.totalInstallments) > 0 && (
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  paddingTop: 40,
+                }}
+              >
+                <Text style={[styles.text, { color: Theme.colors.secondary }]}>
+                  Parcela
                 </Text>
+                <View style={[styles.chipButton, { paddingHorizontal: 20 }]}>
+                  <Text
+                    style={[
+                      styles.text,
+                      { fontSize: Theme.typography.sm, fontWeight: 600 },
+                    ]}
+                  >
+                    {params.installment} de {params.totalInstallments}
+                  </Text>
+                </View>
               </View>
-            </View>
+            )}
           </View>
         )}
       </ScrollView>

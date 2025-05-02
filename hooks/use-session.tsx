@@ -50,7 +50,6 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     const getProfile = async () => {
       let profileJson = await AsyncStorage.getItem(`profile:${user?.id}`);
       if (!profileJson) profileJson = JSON.stringify(await getDefaultProfile());
-      console.log(profileJson);
       await changeProfile(JSON.parse(profileJson));
     };
 
@@ -72,7 +71,6 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   };
 
   const changeToDefaultProfile = async () => {
-    console.log("changing to default...");
     let profileJson = await AsyncStorage.getItem(`profile:${user?.id}`);
     if (!profileJson) {
       try {
@@ -82,7 +80,6 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
         throw new Error("Failed to fetch profileId from API");
       }
     }
-    console.log(profileJson);
     await changeProfile(JSON.parse(profileJson));
   };
 

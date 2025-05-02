@@ -8,19 +8,20 @@ interface Props {
   data: Transaction;
 }
 
-export default function UpcomingExpenseItem({ data }: Props) {
+export default function TransactionsItem({ data }: Props) {
   return (
-    <View
-      style={styles.card}
-    >
+    <View style={[styles.card, { marginBottom: 2 }]}>
       <View
         style={{
           display: "flex",
           flexDirection: "column",
           gap: 4,
+          paddingVertical: 4
         }}
       >
-        <Text style={[styles.text, {fontSize: Theme.typography.sm}]}>{capitalize(data.title)}</Text>
+        <Text style={[styles.text, { fontSize: Theme.typography.sm }]}>
+          {capitalize(data.title)}
+        </Text>
 
         <Text
           style={[

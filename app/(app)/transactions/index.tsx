@@ -1,6 +1,7 @@
 import DropdownLabelInput from "@/components/dropdowns/dropdown-label-input";
 import Header from "@/components/header";
 import TransactionsList from "@/components/lists/transactions-list";
+import { MaskedInput } from "@/components/masked-input";
 import MonthSummaryCard from "@/components/month-summary-card";
 import RecalculateWalletButton from "@/components/recalculate-wallet-button";
 import TypeGroupButton from "@/components/type-group-button";
@@ -60,6 +61,8 @@ export default function TransactionsScreen() {
     defaultValues: {
       isInstallment: false,
       isRecurrent: false,
+      maxValue: "",
+      minValue: "",
     },
   });
 
@@ -306,20 +309,18 @@ export default function TransactionsScreen() {
                 <Controller
                   control={control}
                   name="minValue"
-                  render={({ field: { onChange, value } }) => (
+                  render={({ field: { onChange, onBlur, value } }) => (
                     <View
                       style={[styles.row, { justifyContent: "space-between" }]}
                     >
                       <Text style={[styles.text, { width: 120 }]}>
                         Valor Mínimo
                       </Text>
-                      <TextInput
-                        style={[styles.input, { flex: 1 }]}
-                        placeholder="R$0,00"
-                        keyboardType="numeric"
-                        placeholderTextColor={Theme.colors.secondary}
-                        value={value ? String(value) : ""}
-                        onChangeText={onChange}
+                      <MaskedInput
+                        style={{ flex: 1 }}
+                        value={value}
+                        onChange={onChange}
+                        onBlur={onBlur}
                       />
                     </View>
                   )}
@@ -328,20 +329,18 @@ export default function TransactionsScreen() {
                 <Controller
                   control={control}
                   name="maxValue"
-                  render={({ field: { onChange, value } }) => (
+                  render={({ field: { onChange, onBlur, value } }) => (
                     <View
                       style={[styles.row, { justifyContent: "space-between" }]}
                     >
                       <Text style={[styles.text, { width: 120 }]}>
-                        Valor Mínimo
+                        Valor Máximo
                       </Text>
-                      <TextInput
-                        style={[styles.input, { flex: 1 }]}
-                        placeholder="R$0,00"
-                        keyboardType="numeric"
-                        placeholderTextColor={Theme.colors.secondary}
-                        value={value ? String(value) : ""}
-                        onChangeText={onChange}
+                      <MaskedInput
+                        style={{ flex: 1 }}
+                        value={value}
+                        onChange={onChange}
+                        onBlur={onBlur}
                       />
                     </View>
                   )}

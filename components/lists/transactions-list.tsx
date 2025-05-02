@@ -1,13 +1,13 @@
 import React from "react";
-import { ScrollView, Text, TouchableOpacity } from "react-native";
+import { FlatList, Text, TouchableOpacity } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { Transaction } from "@/models/transaction";
 import { getTransactionsByMonthAndYear } from "@/services/transactions";
 import { router } from "expo-router";
-import TransactionsItem from "../transaction-item";
-import { styles } from "@/styling";
+import TransactionsItem from "./items/transaction-item";
 import Loading from "../loading";
 import { FilterTransactionFormData } from "@/schemas/filter-transaction-schema";
+import NoResultsText from "../no-results-text";
 
 type Props = {
   month: number;
@@ -40,38 +40,40 @@ export default function TransactionsList({
       </Text>
     );
   if (error) return <Text>Erro ao carregar as movimentações</Text>;
-  return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      {data ? (
-        data.map((transaction) => (
+  if (data && data.length > 0)
+    return (
+      <FlatList
+        style={{
+          width: "100%",
+        }}
+        showsHorizontalScrollIndicator={false}
+        data={data}
+        renderItem={(value) => (
           <TouchableOpacity
-            key={transaction.id}
+            key={value.item.id}
             style={{ marginBottom: 12 }}
             onPress={() =>
               router.push({
                 pathname: "/(modals)/details-transaction-modal",
                 params: {
-                  id: transaction.id,
-                  title: transaction.title,
-                  occurredAt: transaction.occurredAt.toString(),
-                  type: transaction.type,
-                  valueBrl: transaction.valueBrl,
-                  labelTitle: transaction.label?.title,
-                  frequency: transaction.frequency,
-                  totalInstallments: transaction.totalInstallments,
-                  installment: transaction.installment,
+                  id: value.item.id,
+                  title: value.item.title,
+                  occurredAt: value.item.occurredAt.toString(),
+                  type: value.item.type,
+                  valueBrl: value.item.valueBrl,
+                  labelTitle: value.item.label?.title,
+                  frequency: value.item.frequency,
+                  totalInstallments: value.item.totalInstallments,
+                  installment: value.item.installment,
                 },
               })
             }
           >
-            <TransactionsItem data={transaction} />
+            <TransactionsItem data={value.item} />
           </TouchableOpacity>
-        ))
-      ) : (
-        <Text style={[styles.text, { textAlign: "center", marginTop: 28 }]}>
-          Sem resultados
-        </Text>
-      )}
-    </ScrollView>
-  );
+        )}
+      />
+    );
+
+  return <NoResultsText />;
 }

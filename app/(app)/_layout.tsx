@@ -1,6 +1,6 @@
 import { useSession } from "@/hooks/use-session";
-import { Redirect, Tabs } from "expo-router";
-import { Home, Book, Goal, Bell, User, Users } from "lucide-react-native";
+import { Redirect, router, Tabs } from "expo-router";
+import { Home, Book, Goal, Bell, User } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text } from "react-native";
 import { Theme } from "@/constants/theme";
@@ -18,13 +18,19 @@ export default function AppLayout() {
 
   return (
     <Tabs
+      screenListeners={{
+        tabPress: (e) => {
+          const parts = e.target?.split("-");
+          if (parts && parts[0] === "(user)") router.push("/(app)/(user)");
+        },
+      }}
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: {
           backgroundColor: Theme.colors.background,
           paddingTop: 4,
-          borderColor: Theme.colors.bgSecondary
+          borderColor: Theme.colors.bgSecondary,
         },
         headerStyle: {
           backgroundColor: Theme.colors.background,

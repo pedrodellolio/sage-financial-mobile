@@ -1,10 +1,14 @@
 import { Transaction, TransactionType } from "@/models/transaction";
-import { eachDayOfInterval, format } from "date-fns";
+import {
+  addDays,
+  eachDayOfInterval,
+  format,
+  startOfDay,
+  subDays,
+} from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { compareDates, getLastWeekDaysPeriod, today } from "./date";
 import { Theme } from "@/constants/theme";
-import { barDataItem, pieDataItem } from "react-native-gifted-charts";
-import { Summary } from "@/models/summary";
 import { Wallet } from "@/models/wallet";
 
 export const formatBalanceChart = (data: Wallet[]) => {
@@ -24,7 +28,7 @@ export const formatExpensesChart = (data: Transaction[]) => {
   const transactionMap = new Map<string, number>();
 
   data.forEach((t) => {
-    const dateKey = format(t.occurredAt, "yyyy-MM-dd"); // Formata a data como string para chave única
+    const dateKey = format(t.occurredAt, "yyyy-MM-dd");
     transactionMap.set(
       dateKey,
       (transactionMap.get(dateKey) || 0) + t.valueBrl
@@ -44,10 +48,24 @@ export const formatExpensesChart = (data: Transaction[]) => {
   });
 };
 
-export const formatSummaryChart = (data: Transaction[]) => {
-  const { start, end } = getLastWeekDaysPeriod();
-  const expenseMap = new Map();
-  const incomeMap = new Map();
+interface SummaryStack {
+  value: number;
+  color: string;
+  marginBottom?: number;
+}
+
+interface SummaryDataItem {
+  label: string;
+  stacks: SummaryStack[];
+}
+
+export const formatSummaryChart = (data: Transaction[]): SummaryDataItem[] => {
+  const today = startOfDay(new Date());
+  const start = subDays(today, 3);
+  const end = addDays(today, 3);
+
+  const expenseMap = new Map<string, number>();
+  const incomeMap = new Map<string, number>();
 
   data.forEach((t) => {
     const dateKey = format(t.occurredAt, "yyyy-MM-dd");
@@ -58,56 +76,82 @@ export const formatSummaryChart = (data: Transaction[]) => {
     }
   });
 
-  const result: barDataItem[] = [];
-  eachDayOfInterval({ start, end }).forEach((date, index) => {
+  const result: SummaryDataItem[] = [];
+
+  eachDayOfInterval({ start, end }).forEach((date) => {
     const dateKey = format(date, "yyyy-MM-dd");
     const expenseValue = expenseMap.get(dateKey) || 0;
     const incomeValue = incomeMap.get(dateKey) || 0;
-    // const isPrimary = compareDates(date, new Date());
-    const frontColor = Theme.colors.secondary;
+    const label = format(date, "dd", { locale: ptBR });
 
-    // Adiciona a despesa com as propriedades obrigatórias nas posições pares
-    result.push({
-      value: expenseValue,
-      label: format(date, "dd", { locale: ptBR }),
-      spacing: 2,
-      labelWidth: 30,
-      labelTextStyle: { color: "gray" },
-      frontColor,
-    });
+    const stacks: SummaryStack[] = [
+      { value: expenseValue, color: Theme.colors.primary },
+      { value: incomeValue, color: "green", marginBottom: 2 },
+    ];
 
-    // Adiciona a receita sem label nas posições ímpares
-    result.push({
-      value: incomeValue,
-      frontColor: "green",
-    });
+    result.push({ label, stacks });
   });
-
   return result;
 };
 
-export const formatLabelsPieChart = (data: Transaction[]) => {
-  const expenseMap = new Map();
+export const formatLabelsDistributionChart = (data: Transaction[]) => {
+  const sumMap = new Map<string, { value: number; color?: string }>();
 
   data.forEach((t) => {
-    if (t.label) {
-      const dateKey = format(t.occurredAt, "yyyy-MM-dd");
-      expenseMap.set(
-        t.label.title,
-        (expenseMap.get(dateKey) || 0) + t.valueBrl
-      );
+    const label = t.label;
+    if (!label?.title) return;
+
+    const current = sumMap.get(label.title);
+    if (current) {
+      current.value += t.valueBrl;
+    } else {
+      sumMap.set(label.title, {
+        value: t.valueBrl,
+        color: label.colorHex,
+      });
     }
   });
 
-  const result: pieDataItem[] = [];
-  const labels = data.filter((l) => l.label?.title).map((l) => l.label?.title);
-  labels.forEach((label, index) => {
-    const expenseValue = expenseMap.get(label) || 0;
-
-    result.push({
-      value: expenseValue,
-    });
-  });
+  const result = Array.from(sumMap.entries()).map(
+    ([name, { value, color }]) => ({
+      name,
+      value,
+      color: color ?? Theme.colors.secondary,
+    })
+  );
 
   return result;
 };
+
+export function formatFixedVariableExpensesChart(transactions: Transaction[]) {
+  const expenses = transactions.filter(
+    (tx) => tx.type === TransactionType.EXPENSE
+  );
+
+  const fixedTotal = expenses
+    .filter((tx) => tx.frequency !== null)
+    .reduce((sum, tx) => sum + tx.valueBrl, 0);
+
+  const variableTotal = expenses
+    .filter((tx) => tx.frequency === null)
+    .reduce((sum, tx) => sum + tx.valueBrl, 0);
+  console.log(fixedTotal, variableTotal);
+  return [
+    {
+      value: fixedTotal,
+      color: Theme.colors.secondary,
+      tooltipText: fixedTotal.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      }),
+    },
+    {
+      value: variableTotal,
+      color: "green",
+      tooltipText: variableTotal.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      }),
+    },
+  ];
+}

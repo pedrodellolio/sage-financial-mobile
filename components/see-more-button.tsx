@@ -9,11 +9,13 @@ import {
   ViewStyle,
 } from "react-native";
 
-interface Props {}
+interface Props {
+  onPress: () => void;
+}
 
-export default function SeeMoreButton({}: Props) {
+export default function SeeMoreButton({onPress}: Props) {
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={onPress}>
       <Text
         style={[
           styles.text,

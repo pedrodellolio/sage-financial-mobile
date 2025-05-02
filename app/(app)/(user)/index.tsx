@@ -24,53 +24,54 @@ export default function DrawerScreen() {
   };
 
   return (
-    <ScrollView
-      style={[styles.container, { paddingBlock: 12 }]}
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={[styleSheet.row, { marginTop: 10 }]}>
-        <View style={styleSheet.avatar}>
-          <Text
-            style={[
-              styles.text,
-              {
-                textAlign: "center",
-                margin: "auto",
-                fontWeight: 600,
-                fontSize: 1.5 * Theme.typography.xl,
-              },
-            ]}
+    <>
+      <ScrollView
+        style={[styles.container, { paddingBlock: 12 }]}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={[styleSheet.row, { marginTop: 10 }]}>
+          <View style={styleSheet.avatar}>
+            <Text
+              style={[
+                styles.text,
+                {
+                  textAlign: "center",
+                  margin: "auto",
+                  fontWeight: 600,
+                  fontSize: 1.5 * Theme.typography.xl,
+                },
+              ]}
+            >
+              {user?.email?.slice(0, 1).toUpperCase()}
+            </Text>
+          </View>
+          <View style={{ display: "flex", gap: 10 }}>
+            <Text style={styles.text}>{user?.email}</Text>
+            {/* <DropdownProfileInput /> */}
+          </View>
+        </View>
+        <View style={{ marginTop: 30, height: "100%" }}>
+          <TouchableOpacity
+            style={styleSheet.menuButton}
+            onPress={() => router.push("/(app)/(user)/profiles")}
           >
-            {user?.email?.slice(0, 1).toUpperCase()}
-          </Text>
-        </View>
-        <View style={{ display: "flex", gap: 10 }}>
-          <Text style={styles.text}>{user?.email}</Text>
-          <DropdownProfileInput />
-        </View>
-      </View>
-      <View style={{ marginTop: 30 }}>
-        <TouchableOpacity
-          style={styleSheet.menuButton}
-          onPress={() => router.push("/(app)/(user)/profiles")}
-        >
-          <View style={styleSheet.row}>
-            <Users color={Theme.colors.white} size={20} />
-            <Text style={styles.text}>Perfis</Text>
-          </View>
-          <ChevronRight color={Theme.colors.white} size={20} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styleSheet.menuButton}
-          onPress={() => router.push("/(app)/(user)/labels")}
-        >
-          <View style={styleSheet.row}>
-            <Tag color={Theme.colors.white} size={20} />
-            <Text style={styles.text}>Categorias</Text>
-          </View>
-          <ChevronRight color={Theme.colors.white} size={20} />
-        </TouchableOpacity>
-        <TouchableOpacity
+            <View style={styleSheet.row}>
+              <Users color={Theme.colors.white} size={20} />
+              <Text style={styles.text}>Perfis</Text>
+            </View>
+            <ChevronRight color={Theme.colors.white} size={20} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styleSheet.menuButton}
+            onPress={() => router.push("/(app)/(user)/labels")}
+          >
+            <View style={styleSheet.row}>
+              <Tag color={Theme.colors.white} size={20} />
+              <Text style={styles.text}>Categorias</Text>
+            </View>
+            <ChevronRight color={Theme.colors.white} size={20} />
+          </TouchableOpacity>
+          {/* <TouchableOpacity
           style={styleSheet.menuButton}
           onPress={() => router.push("/(app)/(user)/labels")}
         >
@@ -79,11 +80,19 @@ export default function DrawerScreen() {
             <Text style={styles.text}>Configurações</Text>
           </View>
           <ChevronRight color={Theme.colors.white} size={20} />
-        </TouchableOpacity>
-      </View>
-
-      <Button title="Sair" onPress={signOut} />
-    </ScrollView>
+        </TouchableOpacity> */}
+        </View>
+      </ScrollView>
+      <TouchableOpacity
+        style={[
+          styles.outlineButton,
+          { position: "absolute", bottom: 0, margin: 20, right: 0, left: 0 },
+        ]}
+        onPress={signOut}
+      >
+        <Text style={[styles.text, { textAlign: "center" }]}>Sair</Text>
+      </TouchableOpacity>
+    </>
   );
 }
 

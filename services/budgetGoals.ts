@@ -42,10 +42,17 @@ export async function postBudgetGoal(
   year: number
 ) {
   try {
+    console.log({
+      value: goal.value,
+      type: goal.type,
+      labelId: goal.label.id,
+      month,
+      year,
+    });
     return await api.post<BudgetGoal>(`budgetGoal`, {
       value: goal.value,
       type: goal.type,
-      label: goal.label,
+      labelId: goal.label.id,
       month,
       year,
     });

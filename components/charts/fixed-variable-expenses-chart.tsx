@@ -2,22 +2,25 @@ import { BarChart, PieChart } from "react-native-gifted-charts";
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Transaction } from "@/models/transaction";
-import { getTransactionsByPeriod } from "@/services/transactions";
-import { getLastWeekDaysPeriod, today } from "@/utils/date";
-import { formatLabelsPieChart } from "@/utils/chart";
+import {
+  getTransactionsByMonthAndYear,
+  getTransactionsByPeriod,
+} from "@/services/transactions";
+import { currentMonth, currentYear, getLastWeekDaysPeriod } from "@/utils/date";
+import { formatFixedVariableExpensesChart } from "@/utils/chart";
 import { Text, View } from "react-native";
 import { Theme } from "@/constants/theme";
+import { styles } from "@/styling";
 
-export default function LabelsPieChart() {
-  const { start, end } = getLastWeekDaysPeriod();
+export default function FixedVariableExpensesChart() {
   const { data, isLoading, error } = useQuery<Transaction[]>({
-    queryKey: ["transaction", start, end],
-    queryFn: () => getTransactionsByPeriod(start, end),
+    queryKey: ["transaction", currentMonth, currentYear],
+    queryFn: () => getTransactionsByMonthAndYear(currentMonth, currentYear),
   });
 
   const chartData = useMemo(() => {
     if (!data) return [];
-    return formatLabelsPieChart(data);
+    return formatFixedVariableExpensesChart(data);
   }, [data]);
 
   const renderTitle = () => {
@@ -43,12 +46,12 @@ export default function LabelsPieChart() {
 
             <Text
               style={{
-                width: 60,
+                width: 70,
                 height: 20,
                 color: Theme.colors.secondary,
               }}
             >
-              Despesas
+              Recorrentes
             </Text>
           </View>
 
@@ -70,7 +73,7 @@ export default function LabelsPieChart() {
                 color: Theme.colors.secondary,
               }}
             >
-              Receitas
+              Variáveis
             </Text>
           </View>
         </View>
@@ -83,16 +86,22 @@ export default function LabelsPieChart() {
   return (
     <View
       style={{
-        backgroundColor: Theme.colors.bgSecondary,
+        backgroundColor: "#1E1E1E",
         borderRadius: Theme.radius.lg,
         padding: 10,
         paddingBlock: 20,
       }}
     >
       {renderTitle()}
-      <View style={{ alignItems: "center" }}>
-        <PieChart data={chartData} />
-      </View>
+      <PieChart
+        radius={130}
+        paddingHorizontal={2}
+        paddingVertical={10}
+        textSize={20}
+        textBackgroundRadius={26}
+        data={chartData}
+        showTooltip
+      />
     </View>
   );
 }

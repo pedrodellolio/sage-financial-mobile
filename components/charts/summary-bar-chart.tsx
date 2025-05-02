@@ -7,6 +7,7 @@ import { getLastWeekDaysPeriod } from "@/utils/date";
 import { formatSummaryChart } from "@/utils/chart";
 import { Text, View } from "react-native";
 import { Theme } from "@/constants/theme";
+import { styles } from "@/styling";
 
 export default function SummaryBarChart() {
   const { start, end } = getLastWeekDaysPeriod();
@@ -37,7 +38,7 @@ export default function SummaryBarChart() {
                 height: 12,
                 width: 12,
                 borderRadius: 6,
-                backgroundColor: Theme.colors.secondary,
+                backgroundColor: Theme.colors.primary,
                 marginRight: 8,
               }}
             />
@@ -84,7 +85,7 @@ export default function SummaryBarChart() {
   return (
     <View
       style={{
-        backgroundColor: Theme.colors.bgSecondary,
+        backgroundColor: "#1E1E1E",
         borderRadius: Theme.radius.lg,
         padding: 10,
         paddingBlock: 20,
@@ -92,18 +93,48 @@ export default function SummaryBarChart() {
     >
       {renderTitle()}
       <BarChart
-        noOfSections={2}
-        barBorderRadius={Theme.radius.lg}
-        data={chartData}
         xAxisLabelTextStyle={{ color: Theme.colors.secondary }}
         yAxisTextStyle={{ color: Theme.colors.secondary }}
+        barBorderRadius={Theme.radius.md}
         yAxisThickness={0}
         xAxisThickness={0}
-        // hideYAxisText
-        // hideRules
-        adjustToWidth
-        // parentWidth={400}
-        height={140}
+        barWidth={12}
+        noOfSections={4}
+        spacing={22}
+        height={180}
+        stackData={chartData}
+        renderTooltip={(item: any, index: number) => {
+          return (
+            <View
+              style={[
+                styles.card,
+                {
+                  zIndex: 100,
+                  position: "absolute",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                },
+              ]}
+            >
+              <Text style={[styles.text, { fontSize: Theme.typography.sm }]}>
+                Despesas:{" "}
+                {item.stacks[0].value.toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                })}
+              </Text>
+              <Text style={[styles.text, { fontSize: Theme.typography.sm }]}>
+                Receitas:{" "}
+                {item.stacks[1].value.toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                })}
+              </Text>
+            </View>
+          );
+        }}
+        autoCenterTooltip
       />
     </View>
   );

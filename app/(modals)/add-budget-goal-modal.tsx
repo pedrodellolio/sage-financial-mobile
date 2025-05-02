@@ -38,7 +38,7 @@ type Params = {
 
 export default function AddBudgetGoalModal() {
   const params: Params = useLocalSearchParams();
-
+  console.log
   const { data, isLoading, error } = useQuery<BudgetGoal>({
     queryKey: ["budgetGoal", params.id],
     queryFn: () => getBudgetGoalById(params.id),
@@ -229,7 +229,7 @@ export default function AddBudgetGoalModal() {
               <DropdownLabelInput
                 style={{ height: 50 }}
                 onChange={onChange}
-                value={value}
+                value={{ ...value, colorHex: "" }}
                 month={Number(params.month)}
                 year={Number(params.year)}
                 fromBudgetGoal={
