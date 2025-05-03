@@ -51,7 +51,7 @@ export default function TransactionsList({
         renderItem={(value) => (
           <TouchableOpacity
             key={value.item.id}
-            style={{ marginBottom: 12 }}
+            style={{ marginBottom: 8 }}
             onPress={() =>
               router.push({
                 pathname: "/(modals)/details-transaction-modal",

@@ -4,18 +4,21 @@ import { styles } from "@/styling";
 import React from "react";
 import { Pressable, View, Text } from "react-native";
 
+export enum NotificationType {
+  TRANSACTION,
+  GOAL,
+}
+
 type Props = {
   onChange: (...event: any[]) => void;
-  value: TransactionType | null;
+  value: NotificationType | null;
   isFiltering?: boolean;
 };
 
-export default function TypeGroupButton({
+export default function NotificationGroupButton({
   onChange,
   value,
-  isFiltering = false,
 }: Props) {
-  console.log(value);
   return (
     <View
       style={{
@@ -29,40 +32,12 @@ export default function TypeGroupButton({
         borderRadius: Theme.radius.xl,
       }}
     >
-      {isFiltering && (
-        <Pressable
-          onPress={() => onChange(null)}
-          style={[
-            {
-              backgroundColor:
-                value === null
-                  ? Theme.colors.primary
-                  : Theme.colors.bgSecondary,
-              padding: 10,
-              flex: 1,
-              borderRadius: Theme.radius.lg,
-            },
-          ]}
-        >
-          <Text
-            style={[
-              styles.text,
-              {
-                textAlign: "center",
-                fontWeight: value === null ? 800 : 400,
-              },
-            ]}
-          >
-            Ambos
-          </Text>
-        </Pressable>
-      )}
       <Pressable
-        onPress={() => onChange(TransactionType.EXPENSE)}
+        onPress={() => onChange(NotificationType.TRANSACTION)}
         style={[
           {
             backgroundColor:
-              value == TransactionType.EXPENSE
+              value == NotificationType.TRANSACTION
                 ? Theme.colors.primary
                 : Theme.colors.bgSecondary,
             padding: 10,
@@ -76,19 +51,19 @@ export default function TypeGroupButton({
             styles.text,
             {
               textAlign: "center",
-              fontWeight: value == TransactionType.EXPENSE ? 800 : 400,
+              fontWeight: value == NotificationType.TRANSACTION ? 800 : 400,
             },
           ]}
         >
-          Despesa
+          Movimentações
         </Text>
       </Pressable>
       <Pressable
-        onPress={() => onChange(TransactionType.INCOME)}
+        onPress={() => onChange(NotificationType.GOAL)}
         style={[
           {
             backgroundColor:
-              value == TransactionType.INCOME
+              value == NotificationType.GOAL
                 ? Theme.colors.primary
                 : Theme.colors.bgSecondary,
             padding: 10,
@@ -102,11 +77,11 @@ export default function TypeGroupButton({
             styles.text,
             {
               textAlign: "center",
-              fontWeight: value == TransactionType.INCOME ? 800 : 400,
+              fontWeight: value == NotificationType.GOAL ? 800 : 400,
             },
           ]}
         >
-          Receita
+          Metas
         </Text>
       </Pressable>
     </View>

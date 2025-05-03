@@ -108,6 +108,7 @@ export async function updateTransaction(
   transaction: AddTransactionFormData
 ) {
   try {
+    console.log(transaction);
     return await api.put<boolean>(`transaction`, {
       ...transaction,
       id: transactionId,

@@ -1,4 +1,3 @@
-import DropdownLabelInput from "@/components/dropdowns/dropdown-label-input";
 import Header from "@/components/header";
 import TransactionsList from "@/components/lists/transactions-list";
 import { MaskedInput } from "@/components/masked-input";
@@ -7,28 +6,19 @@ import RecalculateWalletButton from "@/components/recalculate-wallet-button";
 import TypeGroupButton from "@/components/type-group-button";
 import { MONTHS } from "@/constants/months";
 import { Theme } from "@/constants/theme";
-import { TransactionType } from "@/models/transaction";
-import { AddTransactionFormData } from "@/schemas/add-transaction-schema";
 import {
   FilterTransactionFormData,
   filterTransactionSchema,
 } from "@/schemas/filter-transaction-schema";
-import { getTransactionsByMonthAndYear } from "@/services/transactions";
 import { styles } from "@/styling";
-import {
-  currentMonth,
-  currentYear,
-  getFirstDayOfMonth,
-  getLastDayOfMonth,
-} from "@/utils/date";
+import { currentMonth, currentYear } from "@/utils/date";
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import {
   ChevronLeft,
@@ -37,7 +27,7 @@ import {
   Search,
   ArrowUpAZ,
 } from "lucide-react-native";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Switch, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -52,17 +42,14 @@ export default function TransactionsScreen() {
   const searchRef = useRef<TextInput | null>(null);
   const queryClient = useQueryClient();
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FilterTransactionFormData>({
+  const { control, handleSubmit } = useForm<FilterTransactionFormData>({
     resolver: zodResolver(filterTransactionSchema),
     defaultValues: {
       isInstallment: false,
       isRecurrent: false,
       maxValue: "",
       minValue: "",
+      type: null,
     },
   });
 
@@ -264,6 +251,18 @@ export default function TransactionsScreen() {
               <View style={{ marginTop: 28, gap: 16 }}>
                 <Controller
                   control={control}
+                  name="type"
+                  render={({ field: { onChange, value } }) => (
+                    <TypeGroupButton
+                      onChange={onChange}
+                      value={value}
+                      isFiltering
+                    />
+                  )}
+                />
+
+                <Controller
+                  control={control}
                   name="isRecurrent"
                   render={({ field: { onChange, value } }) => (
                     <View
@@ -367,14 +366,6 @@ export default function TransactionsScreen() {
                         style={{ height: 48 }}
                       />
                     </View>
-                  )}
-                /> */}
-
-                {/* <Controller
-                  control={control}
-                  name="type"
-                  render={({ field: { onChange, value } }) => (
-                    <TypeGroupButton onChange={onChange} value={value} />
                   )}
                 /> */}
 

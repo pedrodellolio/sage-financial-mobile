@@ -34,12 +34,13 @@ import {
   postTransaction,
   updateTransaction,
 } from "@/services/transactions";
-import { addDays, addMonths } from "date-fns";
+import { addDays, addMonths, addYears } from "date-fns";
 import Loading from "@/components/loading";
 import DropdownLabelInput from "@/components/dropdowns/dropdown-label-input";
 import DropdownRecurrenceInput from "@/components/dropdowns/dropdown-recurrence-input";
 import TypeGroupButton from "@/components/type-group-button";
 import { MaskedInput } from "@/components/masked-input";
+import { Label } from "@/models/label";
 
 type Params = {
   id: string;
@@ -81,7 +82,7 @@ export default function AddTransactionsModal() {
       setValue("frequency", data?.frequency ?? RecurrenceType.MONTHLY);
       setIsInstallment(false);
     } else {
-      setValue("frequency", data?.frequency ?? undefined);
+      setValue("frequency", undefined);
     }
   }, [isRecurrent]);
 
@@ -92,7 +93,7 @@ export default function AddTransactionsModal() {
       setIsRecurrent(false);
     } else {
       setValue("totalInstallments", 0);
-      setValue("frequency", data?.frequency ?? undefined);
+      setValue("frequency", undefined);
     }
   }, [isInstallment]);
 
@@ -147,10 +148,10 @@ export default function AddTransactionsModal() {
     switch (option) {
       case RecurrenceType.WEEKLY:
         return addDays(occurredAt, 7);
-      case RecurrenceType.BIWEEKLY:
-        return addDays(occurredAt, 14);
       case RecurrenceType.MONTHLY:
         return addMonths(occurredAt, 1);
+      case RecurrenceType.YEARLY:
+        return addYears(occurredAt, 1);
       default:
         return occurredAt;
     }
@@ -315,7 +316,7 @@ export default function AddTransactionsModal() {
             render={({ field: { onChange, value } }) => (
               <DropdownLabelInput
                 onChange={onChange}
-                value={value}
+                value={{ ...value } as Label}
                 month={Number(params.month)}
                 year={Number(params.year)}
               />

@@ -5,8 +5,6 @@ import { Transaction } from "@/models/transaction";
 import { useQuery } from "@tanstack/react-query";
 import TransactionsItem from "./items/transaction-item";
 import { FlatList, Text, View } from "react-native";
-import { styles } from "@/styling";
-import { Theme } from "@/constants/theme";
 import NoResultsText from "../no-results-text";
 
 type Props = {};
@@ -14,7 +12,7 @@ type Props = {};
 export default function LatestTransactionsList({}: Props) {
   const { start, end } = getLastWeekDaysPeriod();
   const { data, isLoading, error } = useQuery<Transaction[]>({
-    queryKey: ["transactions", start, end],
+    queryKey: ["transactions", "latest", start, end],
     queryFn: () => getTransactionsByPeriod(start, end),
   });
 
@@ -31,7 +29,9 @@ export default function LatestTransactionsList({}: Props) {
         showsHorizontalScrollIndicator={false}
         data={data}
         renderItem={(value) => (
-          <TransactionsItem key={value.item.id} data={value.item} />
+          <View style={{ marginBottom: 8 }}>
+            <TransactionsItem key={value.item.id} data={value.item} />
+          </View>
         )}
       />
     );

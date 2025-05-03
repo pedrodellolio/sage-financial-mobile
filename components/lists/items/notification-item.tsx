@@ -6,12 +6,15 @@ import { Notification } from "@/models/notification";
 import { Bell, BellOff } from "lucide-react-native";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toggleNotification } from "@/services/notifications";
+import { getNotificationData } from "@/utils/notifications";
+import { NotificationType } from "@/components/notification-group-button";
 
 interface Props {
   data: Notification;
+  type: NotificationType;
 }
 
-export default function NotificationItem({ data }: Props) {
+export default function NotificationItem({ data, type }: Props) {
   const queryClient = useQueryClient();
 
   const { mutateAsync } = useMutation({
@@ -47,31 +50,41 @@ export default function NotificationItem({ data }: Props) {
       >
         <View style={{ display: "flex", gap: 6 }}>
           <Text style={[styles.text, { fontSize: Theme.typography.sm }]}>
-            {capitalize(data.transaction.title)}
+            {capitalize(getNotificationData(data).title)}
           </Text>
-          <Text
-            style={[
-              styles.text,
-              { fontWeight: 600, fontSize: Theme.typography.lg },
-            ]}
-          >
-            {data.transaction.valueBrl.toLocaleString("pt-BR", {
-              style: "currency",
-              currency: "BRL",
-            })}
-          </Text>
+          {type === NotificationType.TRANSACTION && (
+            <Text
+              style={[
+                styles.text,
+                { fontWeight: 600, fontSize: Theme.typography.lg },
+              ]}
+            >
+              {data.transaction?.valueBrl.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              })}
+            </Text>
+          )}
+
           <Text
             style={[
               styles.text,
               { color: Theme.colors.secondary, fontSize: Theme.typography.sm },
             ]}
           >
-            Próxima notificação:{" "}
-            {new Date(data.triggerDate).toLocaleDateString("pt-BR")}
+            {type === NotificationType.TRANSACTION
+              ? `Próxima notificação: ${new Date(
+                  data.triggerDate
+                ).toLocaleDateString("pt-BR")}`
+              : "Ao chegar em 80% do limite definido"}
           </Text>
         </View>
         <TouchableOpacity
-          onPress={() => handleToggleNotification(data.transaction.id)}
+          onPress={() => {
+            if (data.transaction || data.budgetGoal) {
+              handleToggleNotification(getNotificationData(data).id);
+            }
+          }}
           style={{
             backgroundColor: data.isEnabled
               ? Theme.colors.background
@@ -83,7 +96,11 @@ export default function NotificationItem({ data }: Props) {
           {data.isEnabled ? (
             <Bell fill={Theme.colors.primary} size={18} />
           ) : (
-            <BellOff fill={Theme.colors.secondary} color={Theme.colors.secondary} size={18} />
+            <BellOff
+              fill={Theme.colors.secondary}
+              color={Theme.colors.secondary}
+              size={18}
+            />
           )}
         </TouchableOpacity>
       </View>

@@ -21,31 +21,37 @@ export enum TransactionType {
 
 export enum RecurrenceType {
   WEEKLY,
-  BIWEEKLY,
   MONTHLY,
   YEARLY,
 }
 
 const RecurrenceTypeMap: Record<RecurrenceType, string> = {
   [RecurrenceType.WEEKLY]: "Semanal",
-  [RecurrenceType.BIWEEKLY]: "Quinzenal",
   [RecurrenceType.MONTHLY]: "Mensal",
   [RecurrenceType.YEARLY]: "Anual",
 };
 
-const ReverseRecurrenceTypeMap: Record<string, RecurrenceType> = Object.fromEntries(
-  Object.entries(RecurrenceTypeMap).map(([key, value]) => [value, Number(key) as RecurrenceType])
-);
+const ReverseRecurrenceTypeMap: Record<string, RecurrenceType> =
+  Object.fromEntries(
+    Object.entries(RecurrenceTypeMap).map(([key, value]) => [
+      value,
+      Number(key) as RecurrenceType,
+    ])
+  );
 
 export const getRecurrenceTypeLabel = (type: RecurrenceType): string => {
   return RecurrenceTypeMap[type] || "Mensal";
 };
 
-export const getRecurrenceTypeFromLabel = (label: string): RecurrenceType | null => {
+export const getRecurrenceTypeFromLabel = (
+  label: string
+): RecurrenceType | null => {
   return ReverseRecurrenceTypeMap[label] ?? null;
 };
 
-export const RecurrenceOptions = Object.entries(RecurrenceTypeMap).map(([key, title]) => ({
-  id: Number(key),
-  title,
-}));
+export const RecurrenceOptions = Object.entries(RecurrenceTypeMap).map(
+  ([key, title]) => ({
+    id: Number(key),
+    title,
+  })
+);

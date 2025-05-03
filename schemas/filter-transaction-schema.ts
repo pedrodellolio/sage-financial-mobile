@@ -12,7 +12,7 @@ export const filterTransactionSchema = z.object({
   //     title: z.string(),
   //   })
   //   .optional(),
-  type: z.nativeEnum(TransactionType).optional(),
+  type: z.nativeEnum(TransactionType).nullable(),
 });
 
 export type FilterTransactionFormData = z.infer<typeof filterTransactionSchema>;

@@ -1,15 +1,9 @@
-import { Theme } from "@/constants/theme";
-import { Transaction, TransactionType } from "@/models/transaction";
 import { styles } from "@/styling";
-import { compareDates, today } from "@/utils/date";
-import { ReactNode } from "react";
 import {
   StyleProp,
-  StyleSheet,
   Text,
   TextStyle,
   TouchableOpacity,
-  View,
   ViewStyle,
 } from "react-native";
 
