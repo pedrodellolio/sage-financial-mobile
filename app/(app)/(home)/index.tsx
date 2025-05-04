@@ -2,196 +2,40 @@ import DropdownProfileInput from "@/components/dropdowns/dropdown-profile-input"
 import Header from "@/components/header";
 import LatestTransactionsList from "@/components/lists/latest-transactions-list";
 import Loading from "@/components/loading";
-import ProfilesList from "@/components/lists/profiles-list";
-import SeeMoreButton from "@/components/see-more-button";
-import UpcomingExpensesList from "@/components/lists/upcoming-expenses-list";
-import { Theme } from "@/constants/theme";
-import { useSession } from "@/hooks/use-session";
-import { Profile } from "@/models/profile";
+import SeeMoreButton from "@/components/buttons/see-more-button";
 import { Summary } from "@/models/summary";
 import { getSummary } from "@/services/wallet";
 import { styles } from "@/styling";
 import { currentMonth, currentYear } from "@/utils/date";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
-import { ChevronRight, Plus } from "lucide-react-native";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
-
-const currentProfile = async (userId?: string) => {
-  const profileJson = await AsyncStorage.getItem(`profile:${userId}`);
-  const profile = profileJson && JSON.parse(profileJson);
-  return profile as Profile;
-};
+import { ScrollView, Text, View } from "react-native";
+import ErrorScreen from "@/components/error-screen";
+import SummaryCards from "@/components/cards/summary-cards";
+import ProfileSummaryCards from "@/components/cards/profile-summary-cards";
+import UpcomingPaymentsCards from "@/components/cards/upcoming-payments-cards";
+import Avatar from "@/components/avatar";
 
 export default function DashboardScreen() {
-  const { user } = useSession();
   const { data, isLoading, error } = useQuery<Summary>({
     queryKey: ["summary", currentMonth, currentYear],
     queryFn: () => getSummary(currentMonth, currentYear),
   });
 
-  const {
-    data: profile,
-    isLoading: isLoadingProfile,
-    error: profileError,
-  } = useQuery<Profile>({
-    queryKey: ["profile"],
-    queryFn: () => currentProfile(user?.id),
-  });
-
   if (isLoading) return <Loading />;
-  if (error) return <Text>Error loading transactions</Text>;
+  if (error) return <ErrorScreen error={error} />;
   return (
     <View style={[styles.container]}>
       <Header
-        // middle={`${MONTHS[currentMonth - 1].short} ${currentYear}`}
         left={<DropdownProfileInput />}
-        right={
-          <TouchableOpacity>
-            <Plus color={Theme.colors.white} />
-          </TouchableOpacity>
-        }
+        right={<Avatar />}
+        showIcon={false}
       />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{ display: "flex", gap: 10 }}>
-          <View
-            style={{
-              backgroundColor: Theme.colors.bgSecondary,
-              padding: 20,
-              borderRadius: Theme.radius.lg,
-            }}
-          >
-            <TouchableOpacity
-              style={[styles.row, { justifyContent: "space-between" }]}
-              onPress={() => router.push("/(app)/(home)/dashboard")}
-            >
-              <View>
-                <Text
-                  style={{
-                    fontSize: Theme.typography.sm,
-                    color: Theme.colors.secondary,
-                  }}
-                >
-                  Saldo
-                </Text>
-                <Text
-                  style={[
-                    styles.text,
-                    {
-                      fontWeight: 600,
-                      fontSize: Theme.typography["2xl"],
-                    },
-                  ]}
-                >
-                  {(data?.balance ?? 0).toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  })}
-                </Text>
-              </View>
-              <ChevronRight color={Theme.colors.white} />
-            </TouchableOpacity>
-          </View>
-
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              backgroundColor: Theme.colors.bgSecondary,
-              borderRadius: Theme.radius.lg,
-              padding: 20,
-            }}
-          >
-            <View style={{ flex: 1 }}>
-              <Text
-                style={{
-                  fontSize: Theme.typography.sm,
-                  color: Theme.colors.secondary,
-                }}
-              >
-                Receitas
-              </Text>
-              <Text
-                style={{
-                  fontSize: Theme.typography.lg,
-                  fontWeight: 600,
-                  marginTop: 4,
-                  color: Theme.colors.white,
-                }}
-              >
-                {(data?.income ?? 0).toLocaleString("pt-BR", {
-                  style: "currency",
-                  currency: "BRL",
-                })}
-              </Text>
-            </View>
-            <View
-              style={[
-                styles.divider,
-                { flex: 0, borderColor: Theme.colors.secondary },
-              ]}
-            ></View>
-            <View style={{ flex: 1 }}>
-              <Text
-                style={{
-                  fontSize: Theme.typography.sm,
-                  color: Theme.colors.secondary,
-                  marginLeft: 20,
-                }}
-              >
-                Despesas
-              </Text>
-              <Text
-                style={{
-                  fontSize: Theme.typography.lg,
-                  fontWeight: 800,
-                  marginTop: 4,
-                  color: Theme.colors.white,
-                  marginLeft: 20,
-                }}
-              >
-                {(data?.expenses ?? 0).toLocaleString("pt-BR", {
-                  style: "currency",
-                  currency: "BRL",
-                })}
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={{ marginTop: 40 }}>
-          <View
-            style={[
-              styles.row,
-              { marginBottom: 20, justifyContent: "space-between" },
-            ]}
-          >
-            <Text style={[styles.text, { fontWeight: 600 }]}>
-              Resumo por Perfil
-            </Text>
-            {/* <SeeMoreButton /> */}
-          </View>
-          <ProfilesList />
-        </View>
-
-        <View style={{ marginTop: 40 }}>
-          <View
-            style={[
-              styles.row,
-              { marginBottom: 20, justifyContent: "space-between" },
-            ]}
-          >
-            <Text style={[styles.text, { fontWeight: 600 }]}>
-              Próximos Pagamentos
-            </Text>
-            <SeeMoreButton onPress={() => router.push("/(app)/goals")} />
-          </View>
-          <UpcomingExpensesList />
-        </View>
-
-        <View style={{ marginTop: 40 }}>
+        <SummaryCards data={data} />
+        <ProfileSummaryCards />
+        <UpcomingPaymentsCards />
+        <View style={{ marginTop: 32 }}>
           <View
             style={[
               styles.row,

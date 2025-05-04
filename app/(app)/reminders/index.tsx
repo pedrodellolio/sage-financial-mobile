@@ -17,7 +17,7 @@ import { router } from "expo-router";
 import { getNotificationData } from "@/utils/notifications";
 import NotificationGroupButton, {
   NotificationType,
-} from "@/components/notification-group-button";
+} from "@/components/buttons/notification-group-button";
 import { useState } from "react";
 
 export default function RemindersScreen() {

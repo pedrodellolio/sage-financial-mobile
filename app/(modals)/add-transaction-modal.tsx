@@ -27,7 +27,7 @@ import {
   View,
 } from "react-native";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
-import ChipButton from "@/components/chip-button";
+import ChipButton from "@/components/buttons/chip-button";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   getTransactionById,
@@ -38,7 +38,7 @@ import { addDays, addMonths, addYears } from "date-fns";
 import Loading from "@/components/loading";
 import DropdownLabelInput from "@/components/dropdowns/dropdown-label-input";
 import DropdownRecurrenceInput from "@/components/dropdowns/dropdown-recurrence-input";
-import TypeGroupButton from "@/components/type-group-button";
+import TypeGroupButton from "@/components/buttons/type-group-button";
 import { MaskedInput } from "@/components/masked-input";
 import { Label } from "@/models/label";
 

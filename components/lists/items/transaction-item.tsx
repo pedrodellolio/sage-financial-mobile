@@ -16,21 +16,44 @@ export default function TransactionsItem({ data }: Props) {
           display: "flex",
           flexDirection: "column",
           gap: 4,
-          paddingVertical: 4
+          paddingVertical: 4,
         }}
       >
-        <Text style={[styles.text, { fontSize: Theme.typography.sm }]}>
-          {capitalize(data.title)}
-        </Text>
+        <View style={styles.row}>
+          <View
+            style={{
+              height: 36,
+              width: 36,
+              borderRadius: "100%",
+              backgroundColor: Theme.colors.background,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text style={[styles.text, { fontWeight: 500 }]}>
+              {capitalize(data.title[0])}
+            </Text>
+          </View>
 
-        <Text
-          style={[
-            styles.text,
-            { color: Theme.colors.secondary, fontSize: Theme.typography.sm },
-          ]}
-        >
-          {new Date(data.occurredAt).toLocaleDateString("pt-BR")}
-        </Text>
+          <View>
+            <Text style={[styles.text, { fontSize: Theme.typography.sm }]}>
+              {capitalize(data.title)}
+            </Text>
+
+            <Text
+              style={[
+                styles.text,
+                {
+                  color: Theme.colors.secondary,
+                  fontSize: Theme.typography.sm,
+                },
+              ]}
+            >
+              {new Date(data.occurredAt).toLocaleDateString("pt-BR")}
+            </Text>
+          </View>
+        </View>
       </View>
       <Text
         style={[

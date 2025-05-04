@@ -1,9 +1,8 @@
 import Header from "@/components/header";
 import TransactionsList from "@/components/lists/transactions-list";
 import { MaskedInput } from "@/components/masked-input";
-import MonthSummaryCard from "@/components/month-summary-card";
-import RecalculateWalletButton from "@/components/recalculate-wallet-button";
-import TypeGroupButton from "@/components/type-group-button";
+import RecalculateWalletButton from "@/components/buttons/recalculate-wallet-button";
+import TypeGroupButton from "@/components/buttons/type-group-button";
 import { MONTHS } from "@/constants/months";
 import { Theme } from "@/constants/theme";
 import {
@@ -31,6 +30,7 @@ import { useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Switch, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import MonthSummaryCard from "@/components/cards/month-summary-card";
 
 export default function TransactionsScreen() {
   const [searchValue, setSearchValue] = useState("");

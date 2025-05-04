@@ -1,6 +1,5 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import TransactionsItem from "./lists/items/transaction-item";
 import { Text, View } from "react-native";
 import { Summary } from "@/models/summary";
 import { getSummary } from "@/services/wallet";

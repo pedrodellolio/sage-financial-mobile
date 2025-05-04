@@ -27,7 +27,7 @@ export const Theme = {
     secondary: "#9ca3af",
     border: "#9ca3af",
     background: "#171717",
-    bgSecondary: "#303030",
+    bgSecondary: "#252525",
     white: "#fff",
     black: "#000",
   },

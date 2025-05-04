@@ -1,11 +1,10 @@
-import DropdownProfileInput from "@/components/dropdowns/dropdown-profile-input";
+import Avatar from "@/components/avatar";
 import { Theme } from "@/constants/theme";
 import { useSession } from "@/hooks/use-session";
 import { signOut } from "@/services/auth";
 import { styles } from "@/styling";
-import { useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
-import { ChevronRight, Cog, Tag, Users } from "lucide-react-native";
+import { ChevronRight, Tag, Users } from "lucide-react-native";
 import {
   Button,
   ScrollView,
@@ -17,11 +16,6 @@ import {
 
 export default function DrawerScreen() {
   const { user } = useSession();
-  const queryClient = useQueryClient();
-
-  const handleProfileChange = () => {
-    queryClient.resetQueries();
-  };
 
   return (
     <>
@@ -29,25 +23,10 @@ export default function DrawerScreen() {
         style={[styles.container, { paddingBlock: 12 }]}
         showsVerticalScrollIndicator={false}
       >
-        <View style={[styleSheet.row, { marginTop: 10 }]}>
-          <View style={styleSheet.avatar}>
-            <Text
-              style={[
-                styles.text,
-                {
-                  textAlign: "center",
-                  margin: "auto",
-                  fontWeight: 600,
-                  fontSize: 1.5 * Theme.typography.xl,
-                },
-              ]}
-            >
-              {user?.email?.slice(0, 1).toUpperCase()}
-            </Text>
-          </View>
+        <View style={[styleSheet.row, { marginTop: 10, paddingInline: 8 }]}>
+          <Avatar width={60} height={60} fontSize={24} />
           <View style={{ display: "flex", gap: 10 }}>
             <Text style={styles.text}>{user?.email}</Text>
-            {/* <DropdownProfileInput /> */}
           </View>
         </View>
         <View style={{ marginTop: 30, height: "100%" }}>
@@ -55,7 +34,7 @@ export default function DrawerScreen() {
             style={styleSheet.menuButton}
             onPress={() => router.push("/(app)/(user)/profiles")}
           >
-            <View style={styleSheet.row}>
+            <View style={[styleSheet.row]}>
               <Users color={Theme.colors.white} size={20} />
               <Text style={styles.text}>Perfis</Text>
             </View>
@@ -71,16 +50,6 @@ export default function DrawerScreen() {
             </View>
             <ChevronRight color={Theme.colors.white} size={20} />
           </TouchableOpacity>
-          {/* <TouchableOpacity
-          style={styleSheet.menuButton}
-          onPress={() => router.push("/(app)/(user)/labels")}
-        >
-          <View style={styleSheet.row}>
-            <Cog color={Theme.colors.white} size={20} />
-            <Text style={styles.text}>Configurações</Text>
-          </View>
-          <ChevronRight color={Theme.colors.white} size={20} />
-        </TouchableOpacity> */}
         </View>
       </ScrollView>
       <TouchableOpacity
@@ -108,6 +77,7 @@ const styleSheet = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 20,
+    paddingInline: 14,
   },
   menuButton: {
     display: "flex",

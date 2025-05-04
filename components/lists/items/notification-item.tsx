@@ -7,7 +7,7 @@ import { Bell, BellOff } from "lucide-react-native";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toggleNotification } from "@/services/notifications";
 import { getNotificationData } from "@/utils/notifications";
-import { NotificationType } from "@/components/notification-group-button";
+import { NotificationType } from "@/components/buttons/notification-group-button";
 
 interface Props {
   data: Notification;

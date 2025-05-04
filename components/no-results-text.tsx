@@ -19,6 +19,7 @@ export default function NoResultsText({}: Props) {
           styles.text,
           {
             color: Theme.colors.secondary,
+            marginTop: 8
           },
         ]}
       >

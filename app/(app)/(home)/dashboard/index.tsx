@@ -1,7 +1,7 @@
 import FixedVariableExpensesChart from "@/components/charts/fixed-variable-expenses-chart";
 import { LabelsDistributionChart } from "@/components/charts/labels-distribution-chart";
 import SummaryBarChart from "@/components/charts/summary-bar-chart";
-import DailyExpenseCard from "@/components/daily-expense-card";
+import DailyExpenseCard from "@/components/cards/daily-expense-card";
 import Header from "@/components/header";
 import { Theme } from "@/constants/theme";
 import { styles } from "@/styling";
