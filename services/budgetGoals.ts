@@ -82,8 +82,7 @@ export async function updateBudgetGoal(
 export async function deleteBudgetGoal(goalId: string) {
   try {
     return await api.delete<BudgetGoal>(`budgetGoal/${goalId}`);
-  } catch (error) {
-    console.error("Error deleting goal:", error);
+  } catch (error: any) {
     throw error;
   }
 }

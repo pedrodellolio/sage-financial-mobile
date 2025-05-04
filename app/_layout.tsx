@@ -9,6 +9,8 @@ import { supabase } from "@/supabaseClient";
 import "react-native-reanimated";
 import { SessionProvider } from "@/hooks/use-session";
 import { WalletProvider } from "@/hooks/use-wallet";
+import Toast from "react-native-toast-message";
+import { toastConfig } from "@/components/toast-alert";
 
 SplashScreen.preventAutoHideAsync();
 const queryClient = new QueryClient();
@@ -38,6 +40,7 @@ const RootLayout = () => {
       <SessionProvider>
         <WalletProvider>
           <Slot />
+          <Toast config={toastConfig} />
         </WalletProvider>
         <StatusBar style="auto" />
       </SessionProvider>

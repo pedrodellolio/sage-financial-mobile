@@ -1,3 +1,4 @@
+import { NotificationType } from "@/components/buttons/notification-group-button";
 import api from "./axios-config";
 import { Notification } from "@/models/notification";
 
@@ -20,9 +21,19 @@ export async function getNotifications(): Promise<Notification[]> {
   }
 }
 
-export async function toggleNotification(transactionId: string) {
+export async function toggleNotification(
+  transactionId: string,
+  type: NotificationType
+) {
+  console.log(transactionId, type);
   try {
-    return await api.put<Notification>(`notifications/toggle/${transactionId}`);
+    return await api.put<Notification>(
+      `notifications/toggle/${transactionId}`,
+      {
+        id: transactionId,
+        type,
+      }
+    );
   } catch (error) {
     console.error("Error disabling notification:", error);
     throw error;

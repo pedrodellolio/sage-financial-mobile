@@ -34,14 +34,14 @@ api.interceptors.request.use(
   }
 );
 
-api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    // console.log(JSON.stringify(error));
+// api.interceptors.response.use(
+//   (response) => {
+//     return response;
+//   },
+//   (error) => {
+//     // console.log(JSON.stringify(error));
 
-    return Promise.reject(error.message);
-  }
-);
+//     return Promise.reject(error.message);
+//   }
+// );
 export default api;

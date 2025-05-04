@@ -28,6 +28,7 @@ import {
 import { BudgetGoal, BudgetGoalType } from "@/models/budgetGoal";
 import { Label } from "@/models/label";
 import DropdownLabelInput from "@/components/dropdowns/dropdown-label-input";
+import Toast from "react-native-toast-message";
 
 type Params = {
   id: string;
@@ -38,7 +39,7 @@ type Params = {
 
 export default function AddBudgetGoalModal() {
   const params: Params = useLocalSearchParams();
-  console.log
+  console.log;
   const { data, isLoading, error } = useQuery<BudgetGoal>({
     queryKey: ["budgetGoal", params.id],
     queryFn: () => getBudgetGoalById(params.id),
@@ -82,6 +83,13 @@ export default function AddBudgetGoalModal() {
     mutationFn: (budgetGoalId: string) => deleteBudgetGoal(budgetGoalId),
     onSuccess: () => {
       router.replace("/(app)/goals");
+    },
+    onError: (error: any) => {
+      Toast.show({
+        type: "error",
+        text1: "Ops!",
+        text2: error.response.data,
+      });
     },
   });
 

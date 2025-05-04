@@ -40,7 +40,7 @@ export default function ErrorScreen({ error }: Props) {
         style={styles.button}
         onPress={() =>
           router.push({
-            pathname: "/(modals)/add-transaction-modal",
+            pathname: "/(app)/(home)",
           })
         }
       >

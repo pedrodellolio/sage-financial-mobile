@@ -18,7 +18,7 @@ export default function NotificationItem({ data, type }: Props) {
   const queryClient = useQueryClient();
 
   const { mutateAsync } = useMutation({
-    mutationFn: (id: string) => toggleNotification(id),
+    mutationFn: (id: string) => toggleNotification(id, type),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notification"] });
     },
