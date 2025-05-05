@@ -47,10 +47,10 @@ export default function RegisterScreen({}: Props) {
             { fontWeight: 800, fontSize: Theme.typography["2xl"] },
           ]}
         >
-          Bem vindo de volta
+          Seja bem vindo
         </Text>
         <Text style={[styles.text, { color: Theme.colors.secondary }]}>
-          Entre para acompanhar sua movimentação
+          Crie uma conta para acompanhar sua movimentação
         </Text>
       </View>
 

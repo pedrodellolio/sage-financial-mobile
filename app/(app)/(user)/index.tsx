@@ -4,7 +4,7 @@ import { useSession } from "@/hooks/use-session";
 import { signOut } from "@/services/auth";
 import { styles } from "@/styling";
 import { router } from "expo-router";
-import { ChevronRight, Tag, Users } from "lucide-react-native";
+import { ChevronRight, Tag, Upload, Users } from "lucide-react-native";
 import {
   Button,
   ScrollView,
@@ -47,6 +47,16 @@ export default function DrawerScreen() {
             <View style={styleSheet.row}>
               <Tag color={Theme.colors.white} size={20} />
               <Text style={styles.text}>Categorias</Text>
+            </View>
+            <ChevronRight color={Theme.colors.white} size={20} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styleSheet.menuButton}
+            onPress={() => router.push("/(app)/(user)/import")}
+          >
+            <View style={styleSheet.row}>
+              <Upload color={Theme.colors.white} size={20} />
+              <Text style={styles.text}>Importar CSV</Text>
             </View>
             <ChevronRight color={Theme.colors.white} size={20} />
           </TouchableOpacity>

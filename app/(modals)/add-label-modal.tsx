@@ -7,7 +7,7 @@ import { ChevronLeft } from "lucide-react-native";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Label } from "@/models/label";
 import { AddLabelFormData, addLabelSchema } from "@/schemas/add-label-schema";
 import {
@@ -23,6 +23,7 @@ type Params = {
 };
 
 export default function AddLabelModal() {
+  const queryClient = useQueryClient();
   const params: Params = useLocalSearchParams();
   const { data, isLoading, error } = useQuery<Label>({
     queryKey: ["label", params.id],
@@ -33,7 +34,7 @@ export default function AddLabelModal() {
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     setValue,
   } = useForm<AddLabelFormData>({
     resolver: zodResolver(addLabelSchema),
@@ -57,6 +58,7 @@ export default function AddLabelModal() {
   const { mutateAsync: deleteAsync } = useMutation({
     mutationFn: (LabelId: string) => deleteLabel(LabelId),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["labels", "transaction"] });
       router.replace("/(app)/(user)/labels");
     },
   });
@@ -68,14 +70,14 @@ export default function AddLabelModal() {
   const confirmDelete = () =>
     Alert.alert(
       "Atenção",
-      "Tem certeza que deseja apagar? Essa ação não é reversível.",
+      "Tem certeza que deseja desativar? Essa ação é irreversível.",
       [
         {
           text: "Voltar",
           style: "cancel",
         },
         {
-          text: "Apagar",
+          text: "Desativar",
           style: "destructive",
           onPress: () => deleteAsync(params.id),
         },
@@ -161,7 +163,7 @@ export default function AddLabelModal() {
                 },
               ]}
             >
-              Apagar
+              Desativar
             </Text>
           </TouchableOpacity>
         )}

@@ -1,14 +1,6 @@
 import { Theme } from "@/constants/theme";
-import { BudgetGoal, BudgetGoalType } from "@/models/budgetGoal";
-import { Transaction, TransactionType } from "@/models/transaction";
-import { Wallet } from "@/models/wallet";
-import { getTotalExpensesByLabel } from "@/services/transactions";
-import { getWalletByMonthAndYear } from "@/services/wallet";
 import { styles } from "@/styling";
-import { useQuery } from "@tanstack/react-query";
-import { DimensionValue, Text, View } from "react-native";
-import ProgressBar from "./progress-bar";
-import { Label } from "@/models/label";
+import { Text, View } from "react-native";
 import { Profile } from "@/models/profile";
 import { capitalize } from "@/utils/format";
 
@@ -17,6 +9,7 @@ interface Props {
 }
 
 export default function ProfileItem({ data }: Props) {
+  console.log(data);
   return (
     <View
       style={{
@@ -40,6 +33,27 @@ export default function ProfileItem({ data }: Props) {
         <Text style={[styles.text, { fontSize: Theme.typography.sm }]}>
           {capitalize(data.title)}
         </Text>
+        {data.isDefault && (
+          <View
+            style={[
+              styles.chipButton,
+              {
+                paddingHorizontal: 16,
+                backgroundColor: Theme.colors.primary,
+                padding: 4
+              },
+            ]}
+          >
+            <Text
+              style={[
+                styles.text,
+                { fontSize: Theme.typography.sm, fontWeight: 600 },
+              ]}
+            >
+              Padrão
+            </Text>
+          </View>
+        )}
       </View>
     </View>
   );

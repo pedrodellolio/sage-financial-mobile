@@ -6,30 +6,28 @@ import { router, useLocalSearchParams } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import {
-  Alert,
-  Pressable,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   AddProfileFormData,
   addProfileSchema,
 } from "@/schemas/add-profile-schema";
-import { deleteProfile, getProfileById, postProfile, updateProfile } from "@/services/profile";
+import {
+  deleteProfile,
+  getProfileById,
+  postProfile,
+  updateProfile,
+} from "@/services/profile";
 import { Profile } from "@/models/profile";
 
 type Params = {
   id: string;
-  title: string;
+  // title: string;
+  // isDefault: string;
 };
 
 export default function AddProfileModal() {
   const params: Params = useLocalSearchParams();
-
   const { data, isLoading, error } = useQuery<Profile>({
     queryKey: ["profile", params.id],
     queryFn: () => getProfileById(params.id),
@@ -39,7 +37,7 @@ export default function AddProfileModal() {
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     setValue,
   } = useForm<AddProfileFormData>({
     resolver: zodResolver(addProfileSchema),
@@ -74,14 +72,14 @@ export default function AddProfileModal() {
   const confirmDelete = () =>
     Alert.alert(
       "Atenção",
-      "Tem certeza que deseja apagar? Essa ação não é reversível.",
+      "Tem certeza que deseja desativar? Essa ação é irreversível.",
       [
         {
           text: "Voltar",
           style: "cancel",
         },
         {
-          text: "Apagar",
+          text: "Desativar",
           style: "destructive",
           onPress: () => deleteAsync(params.id),
         },
@@ -151,7 +149,7 @@ export default function AddProfileModal() {
             {params.id ? "Salvar" : "Criar"}
           </Text>
         </TouchableOpacity>
-        {params.id && (
+        {params.id && !data?.isDefault && (
           <TouchableOpacity
             style={[styles.outlineButton, { flex: 1, borderColor: "red" }]}
             onPress={confirmDelete}
@@ -167,7 +165,7 @@ export default function AddProfileModal() {
                 },
               ]}
             >
-              Apagar
+              Desativar
             </Text>
           </TouchableOpacity>
         )}

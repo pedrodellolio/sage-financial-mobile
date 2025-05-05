@@ -8,7 +8,13 @@ import { styles } from "@/styling";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { ChevronLeft, Plus } from "lucide-react-native";
-import { FlatList, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function ProfilesScreen() {
   const { data, isLoading, error } = useQuery<Profile[]>({
@@ -52,7 +58,6 @@ export default function ProfilesScreen() {
                   pathname: "/(modals)/add-profile-modal",
                   params: {
                     id: value.item.id,
-                    title: value.item.title,
                   },
                 })
               }

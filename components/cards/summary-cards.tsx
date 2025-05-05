@@ -144,7 +144,7 @@ export default function SummaryCards({ data }: Props) {
                 color: Theme.colors.white,
               }}
             >
-              {(data?.income ?? 0).toLocaleString("pt-BR", {
+              {(data?.expenses ?? 0).toLocaleString("pt-BR", {
                 style: "currency",
                 currency: "BRL",
               })}
