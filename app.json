@@ -4,16 +4,23 @@
     "slug": "sage-financial-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/sage-icon.png",
+    "icon": "./assets/icons/sage-icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "icon": {
+        "dark": "./assets/icons/sage-icon.png",
+        "light": "./assets/icons/sage-icon.png",
+        "tinted": "./assets/icons/sage-icon.png"
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/sage-icon.png",
+        "foregroundImage": "./assets/icons/sage-icon.png",
+        "monochromeImage": "./assets/icons/sage-icon.png",
+        "backgroundImage": "./assets/icons/sage-icon.png",
         "backgroundColor": "#f97316"
       },
       "package": "com.pedrodellolio.sagefinancialmobile",
@@ -22,17 +29,21 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/icons/favicon.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/sage-icon.png",
+          "image": "./assets/icons/sage-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#f97316"
+          "backgroundColor": "#f97316",
+          "dark": {
+            "image": "./assets/icons/sage-icon.png",
+            "backgroundColor": "#f97316"
+          }
         }
       ]
     ],
