@@ -29,6 +29,8 @@ import { BudgetGoal, BudgetGoalType } from "@/models/budgetGoal";
 import { Label } from "@/models/label";
 import DropdownLabelInput from "@/components/dropdowns/dropdown-label-input";
 import Toast from "react-native-toast-message";
+import Loading from "@/components/loading";
+import ErrorScreen from "@/components/error-screen";
 
 type Params = {
   id: string;
@@ -118,8 +120,8 @@ export default function AddBudgetGoalModal() {
       }
     );
 
-  if (isLoading) return <Text>Loading...</Text>;
-  if (error) return <Text>Error loading transaction</Text>;
+ if (isLoading) return <Loading />;
+  if (error) return <ErrorScreen error={error} />;
   return (
     <View style={[styles.container, { flex: 1 }]}>
       <Header

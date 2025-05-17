@@ -7,6 +7,8 @@ import { Tag } from "lucide-react-native";
 import React, { useState } from "react";
 import { StyleSheet, View, Text, StyleProp, ViewStyle } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
+import Loading from "../loading";
+import ErrorScreen from "../error-screen";
 
 interface Props {
   value?: Label;
@@ -34,8 +36,8 @@ const DropdownLabelInput = ({
   });
 
   const placeholderText = placeholder ?? "Selecione uma categoria...";
-  if (isLoading) return <Text>Loading...</Text>;
-  if (error) return <Text>Error loading labels</Text>;
+ if (isLoading) return <Loading />;
+  if (error) return <ErrorScreen error={error} />;
   return (
     <View style={{ flex: 1 }}>
       <Dropdown

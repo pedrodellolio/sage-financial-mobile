@@ -8,19 +8,34 @@ import { getSummary } from "@/services/wallet";
 import { styles } from "@/styling";
 import { currentMonth, currentYear } from "@/utils/date";
 import { useQuery } from "@tanstack/react-query";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { ScrollView, Text, View } from "react-native";
 import ErrorScreen from "@/components/error-screen";
 import SummaryCards from "@/components/cards/summary-cards";
 import ProfileSummaryCards from "@/components/cards/profile-summary-cards";
 import UpcomingPaymentsCards from "@/components/cards/upcoming-payments-cards";
 import Avatar from "@/components/avatar";
+import { useEffect } from "react";
+import Toast from "react-native-toast-message";
 
 export default function DashboardScreen() {
   const { data, isLoading, error } = useQuery<Summary>({
     queryKey: ["summary", currentMonth, currentYear],
     queryFn: () => getSummary(currentMonth, currentYear),
   });
+
+  const params = useLocalSearchParams();
+
+  useEffect(() => {
+    console.log(params);
+    if (params["imported"]) {
+      Toast.show({
+        type: "success",
+        text1: "Sucesso!",
+        text2: "Movimentações importadas com sucesso.",
+      });
+    }
+  }, [params]);
 
   if (isLoading) return <Loading />;
   if (error) return <ErrorScreen error={error} />;

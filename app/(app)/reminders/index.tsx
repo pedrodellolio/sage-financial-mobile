@@ -19,6 +19,8 @@ import NotificationGroupButton, {
   NotificationType,
 } from "@/components/buttons/notification-group-button";
 import { useState } from "react";
+import ErrorScreen from "@/components/error-screen";
+import Loading from "@/components/loading";
 
 export default function RemindersScreen() {
   const [selectedTab, setSelectedTab] = useState(NotificationType.TRANSACTION);
@@ -29,9 +31,9 @@ export default function RemindersScreen() {
 
   const goalNotifications = data?.filter((d) => d.budgetGoal != null);
   const transactionNotifications = data?.filter((d) => d.transaction != null);
-
-  if (isLoading) return <Text>Loading...</Text>;
-  if (error) return <Text>Error loading goals</Text>;
+  console.log(goalNotifications);
+  if (isLoading) return <Loading />;
+  if (error) return <ErrorScreen error={error} />;
   return (
     <View style={[styles.container]}>
       <Header middle="Lembretes" />
@@ -53,7 +55,7 @@ export default function RemindersScreen() {
               key={getNotificationData(value.item).id}
               style={{ marginBottom: 12 }}
             >
-              <NotificationItem data={value.item} type={selectedTab}/>
+              <NotificationItem data={value.item} type={selectedTab} />
             </TouchableOpacity>
           )}
         />

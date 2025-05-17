@@ -7,6 +7,8 @@ import { FlatList, Text } from "react-native";
 import UpcomingExpenseItem from "./items/upcoming-expense-item";
 import NoResultsText from "../no-results-text";
 import { addDays } from "date-fns";
+import Loading from "../loading";
+import ErrorScreen from "../error-screen";
 
 type Props = {};
 
@@ -24,8 +26,8 @@ export default function UpcomingExpensesList({}: Props) {
       ),
   });
 
-  if (isLoading) return <Text>Loading...</Text>;
-  if (error) return <Text>Error loading goals</Text>;
+ if (isLoading) return <Loading />;
+  if (error) return <ErrorScreen error={error} />;
   if (data && data.length > 0)
     return (
       <FlatList

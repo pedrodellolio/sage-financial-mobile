@@ -1,5 +1,7 @@
+import ErrorScreen from "@/components/error-screen";
 import Header from "@/components/header";
 import BudgetGoalItem from "@/components/lists/items/budget-goal-item";
+import Loading from "@/components/loading";
 import { MONTHS } from "@/constants/months";
 import { Theme } from "@/constants/theme";
 import { BudgetGoal } from "@/models/budgetGoal";
@@ -54,8 +56,8 @@ export default function GoalsScreen() {
     });
   };
 
-  if (isLoading) return <Text>Loading...</Text>;
-  if (error) return <Text>Error loading goals</Text>;
+ if (isLoading) return <Loading />;
+  if (error) return <ErrorScreen error={error} />;
   return (
     <View style={[styles.container]}>
       <Header

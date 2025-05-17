@@ -63,7 +63,10 @@ export default function ImportFileModal() {
       content: string;
     }) => importFile(data, mappedColumns, content),
     onSuccess: () => {
-      router.replace("/(app)/(user)/profiles");
+      router.replace({
+        pathname: "/(app)/(home)",
+        params: { imported: "1" },
+      });
     },
   });
 
@@ -97,7 +100,11 @@ export default function ImportFileModal() {
     try {
       const result = await DocumentPicker.getDocumentAsync({
         multiple: false,
-        type: "text/comma-separated-values",
+        type: [
+          "text/comma-separated-values",
+          "text/csv",
+          "application/vnd.ms-excel",
+        ],
         copyToCacheDirectory: true,
       });
 

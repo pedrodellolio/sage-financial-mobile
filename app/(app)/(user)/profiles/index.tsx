@@ -1,5 +1,7 @@
+import ErrorScreen from "@/components/error-screen";
 import Header from "@/components/header";
 import ProfileItem from "@/components/lists/items/profile-item";
+import Loading from "@/components/loading";
 import NoResultsText from "@/components/no-results-text";
 import { Theme } from "@/constants/theme";
 import { Profile } from "@/models/profile";
@@ -8,22 +10,17 @@ import { styles } from "@/styling";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { ChevronLeft, Plus } from "lucide-react-native";
-import {
-  FlatList,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { FlatList, TouchableOpacity, View } from "react-native";
 
 export default function ProfilesScreen() {
+
   const { data, isLoading, error } = useQuery<Profile[]>({
     queryKey: ["profiles"],
     queryFn: () => getProfiles(),
   });
 
-  if (isLoading) return <Text>Loading...</Text>;
-  if (error) return <Text>Error loading goals</Text>;
+  if (isLoading) return <Loading />;
+  if (error) return <ErrorScreen error={error} />;
   return (
     <View style={[styles.container]}>
       <Header

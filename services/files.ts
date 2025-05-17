@@ -7,10 +7,6 @@ export async function importFile(
   mapping: MappedColumn[],
   content: string
 ) {
-  console.log({
-    name: data.file.name,
-    content: Array.from(content),
-  });
   try {
     const response = await api.post(`file`, {
       name: data.file.name,
@@ -19,7 +15,6 @@ export async function importFile(
         return { index: m.fileIndex, prop: m.value.prop };
       }),
     });
-    console.log(response);
     return response.data;
   } catch (error) {
     console.log(JSON.stringify(error));

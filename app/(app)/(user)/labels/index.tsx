@@ -1,5 +1,7 @@
+import ErrorScreen from "@/components/error-screen";
 import Header from "@/components/header";
 import LabelItem from "@/components/lists/items/label-item";
+import Loading from "@/components/loading";
 import NoResultsText from "@/components/no-results-text";
 import { Theme } from "@/constants/theme";
 import { Label } from "@/models/label";
@@ -16,8 +18,8 @@ export default function LabelsScreen() {
     queryFn: () => getLabels(),
   });
 
-  if (isLoading) return <Text>Loading...</Text>;
-  if (error) return <Text>Error loading goals</Text>;
+ if (isLoading) return <Loading />;
+  if (error) return <ErrorScreen error={error} />;
   return (
     <View style={[styles.container]}>
       <Header

@@ -19,6 +19,8 @@ import {
   updateProfile,
 } from "@/services/profile";
 import { Profile } from "@/models/profile";
+import Loading from "@/components/loading";
+import ErrorScreen from "@/components/error-screen";
 
 type Params = {
   id: string;
@@ -89,9 +91,8 @@ export default function AddProfileModal() {
         cancelable: true,
       }
     );
-
-  if (isLoading) return <Text>Loading...</Text>;
-  if (error) return <Text>Error loading transaction</Text>;
+  if (isLoading) return <Loading />;
+  if (error) return <ErrorScreen error={error} />;
   return (
     <View style={[styles.container, { flex: 1 }]}>
       <Header

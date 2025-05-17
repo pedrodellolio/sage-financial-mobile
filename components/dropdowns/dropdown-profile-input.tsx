@@ -9,6 +9,8 @@ import { Check } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
+import Loading from "../loading";
+import ErrorScreen from "../error-screen";
 
 interface Props {}
 
@@ -25,8 +27,8 @@ const DropdownProfileInput = ({}: Props) => {
     if (!profile) changeToDefaultProfile();
   }, [profile]);
 
-  if (isLoading) return <Text>Loading...</Text>;
-  if (error) return <Text>Error loading profiles</Text>;
+ if (isLoading) return <Loading />;
+  if (error) return <ErrorScreen error={error} />;
   return (
     <View>
       <Dropdown

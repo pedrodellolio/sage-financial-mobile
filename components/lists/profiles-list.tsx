@@ -8,6 +8,8 @@ import { getProfilesBalance } from "@/services/profile";
 import { ProfileBalance } from "@/models/profileBalance";
 import { useSession } from "@/hooks/use-session";
 import NoResultsText from "../no-results-text";
+import Loading from "../loading";
+import ErrorScreen from "../error-screen";
 
 type Props = {};
 
@@ -19,8 +21,8 @@ export default function ProfilesList({}: Props) {
     queryFn: () => getProfilesBalance(currentMonth, currentYear, user?.id),
   });
 
-  if (isLoading) return <Text>Loading...</Text>;
-  if (error) return <Text>Error loading goals</Text>;
+ if (isLoading) return <Loading />;
+  if (error) return <ErrorScreen error={error} />;
 
   if (data && data.length > 0)
     return (
