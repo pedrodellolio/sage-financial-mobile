@@ -16,7 +16,7 @@ export default function DailyExpenseCard() {
 
   const dailySpending = useMemo(() => {
     if (!data) return [];
-    return data.expensesBrl / getDaysInMonth(today);
+    return data.incomesBrl / getDaysInMonth(today);
   }, [data]);
 
   if (isLoading) return <Text>Carregando...</Text>;

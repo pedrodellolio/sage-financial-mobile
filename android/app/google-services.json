@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "561510884197",
+    "project_id": "sage-financial-app",
+    "storage_bucket": "sage-financial-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:561510884197:android:e056ebedb3368c5641f78c",
+        "android_client_info": {
+          "package_name": "com.pedrodellolio.sagefinancialmobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "561510884197-l5blodtc5poul0ukcfgbc3aths1np5lf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0xldyxJTd_-SWlSdxid6ElT77-lV6hqE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "561510884197-l5blodtc5poul0ukcfgbc3aths1np5lf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

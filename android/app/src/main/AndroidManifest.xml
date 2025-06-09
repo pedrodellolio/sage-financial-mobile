@@ -26,6 +26,7 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="myapp"/>
         <data android:scheme="com.pedrodellolio.sagefinancialmobile"/>
+        <data android:scheme="exp+sage-financial-mobile"/>
       </intent-filter>
     </activity>
   </application>
